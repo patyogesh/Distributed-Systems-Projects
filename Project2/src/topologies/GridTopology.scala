@@ -1,0 +1,5 @@
+package topologies
+
+class GridTopology {
+
+}
