@@ -1,8 +1,11 @@
 package traits
 
 import akka.actor.ActorRef
+import vo.ConvergenceCounter
 
 trait Topology {
 
-  def createTopology(numNodes: Int): ActorRef
+  def createTopology(numNodes: Int, convergenceCounter: ConvergenceCounter): ActorRef
+  
+  def failRandomNode(): Unit
 }
