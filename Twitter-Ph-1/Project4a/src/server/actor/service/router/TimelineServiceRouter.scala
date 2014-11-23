@@ -9,30 +9,29 @@ import akka.routing.RoundRobinRoutingLogic
 import akka.actor.Terminated
 import server.messages.InformLoad
 import server.messages.PrintLoad
+import akka.actor.ActorRef
+import server.messages.Request
+import common.ServiceRequest
 
-class TimelineServiceRouter(count: Int) extends Actor {
+class TimelineServiceRouter(count: Int, loadMonitor: ActorRef) extends Actor {
 
   var load: Int = 0
   var router = {
     val routees = Vector.fill(count) {
-      val r = context.actorOf(Props[TimelineService])
+      val r = context.actorOf(Props(new TimelineService(loadMonitor)))
       context watch r
       ActorRefRoutee(r)
     }
     Router(RoundRobinRoutingLogic(), routees)
   }
   def receive = {
+    case Request(request: ServiceRequest) =>
+      router.route(request, sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props[TimelineService])
       context watch r
       router = router.addRoutee(r)
-    case InformLoad =>
-      sender ! PrintLoad(load) 
-      load = 0
-    case w =>
-      load += 1
-      router.route(w, sender)
     case _ =>
       println("Unknown message received")
   }

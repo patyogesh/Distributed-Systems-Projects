@@ -7,25 +7,20 @@ import akka.actor.ActorRef
 import server.messages.MeasureLoad
 import server.messages.InformLoad
 import server.messages.PrintLoad
+import server.messages.RegisterService
+import server.messages.RegisterLoad
 
-class LoadMonitor(routers: Array[ActorRef]) extends Actor {
-import context.dispatcher
-  
-  var count: Int = 0
+class LoadMonitor() extends Actor {
+  import context.dispatcher
+
   var serverLoad: Int = 0
-  val tweet = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, MeasureLoad)
-  
+  val printLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, PrintLoad)
+
   def receive = {
-    case MeasureLoad =>
-      for(r <- routers)
-        r ! InformLoad
-    case PrintLoad(load) =>
+    case RegisterLoad(load) =>
       serverLoad += load
-      count += 1
-      if(count == routers.length){
-        println(serverLoad)
-        count = 0
-        serverLoad  = 0
-      }
+    case PrintLoad() =>
+      println(serverLoad)
+      serverLoad = 0
   }
 }

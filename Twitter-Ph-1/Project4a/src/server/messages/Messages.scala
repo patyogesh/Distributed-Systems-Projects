@@ -1,8 +1,11 @@
 package server.messages
 
 import akka.actor.ActorRef
+import common.ServiceRequest
 
 sealed trait Messages
+
+case class Request(request: ServiceRequest) extends Messages
 //#RequestListener messages
 case class Timeline() extends Messages
 case class Tweets() extends Messages
@@ -21,11 +24,13 @@ case class PostUpdate(tweet: String, favorites: Int) extends Messages
 case class PostUpdateWithMedia() extends Messages
 case class PostDestroy() extends Messages
 //#
-case class Request(service: String, endPoint: String, tweet: String, followers: Int)
+//case class Request(service: String, endPoint: String, tweet: String, followers: Int)
 
 case class Print() extends Messages
 
 //#Load Monitor Messages
 case class MeasureLoad() extends Messages
 case class InformLoad() extends Messages
-case class PrintLoad(load: Int) extends Messages
+case class RegisterLoad(load: Int) extends Messages
+case class PrintLoad() extends Messages
+case class RegisterService(service: ActorRef) extends Messages

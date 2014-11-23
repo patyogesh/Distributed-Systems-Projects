@@ -9,12 +9,13 @@ import server.actor.service.impl._
 import server.actor.service.router.TimelineServiceRouter
 import server.actor.service.router.TweetsServiceRouter
 import com.typesafe.config.ConfigFactory
-import constants.Constants
+import common.Constants
 
 object Main {
   def main(args: Array[String]) {
+    val constants = new Constants()
+    
     val hostAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
-    val TwitterServerPort = 4030
 
     val configString = """akka {
   actor {
@@ -24,7 +25,7 @@ object Main {
     enabled-transports = ["akka.remote.netty.tcp"]
     netty.tcp {
       hostname = """ + hostAddress + """
-      port = """ + TwitterServerPort + """
+      port = """ + constants.SERVER_PORT + """
     }
  }
 }"""
@@ -39,14 +40,17 @@ object Main {
   }
 
   def createServiceRouter(system: ActorSystem, cores: Int) = {
-    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2)), name = "TimelineServiceRouter")    
-    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2)), name = "TweetsServiceRouter")
-  
+    val loadMonitor: ActorRef = createLoadMonitor(system)
+
+    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2, loadMonitor)), name = "TimelineServiceRouter")
+    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2, loadMonitor)), name = "TweetsServiceRouter")
+
     val routers = Array(timelineServiceRouter, tweetsServiceRouter)
-    createLoadMonitor(system, routers)
+
   }
-  
-  def createLoadMonitor(system: ActorSystem, routers: Array[ActorRef]) = {
-    val loadMonitor = system.actorOf(Props(new LoadMonitor(routers)), name = "LoadMonitor")
+
+  def createLoadMonitor(system: ActorSystem): ActorRef = {
+    val loadMonitor = system.actorOf(Props(new LoadMonitor()), name = "LoadMonitor")
+    loadMonitor
   }
 }

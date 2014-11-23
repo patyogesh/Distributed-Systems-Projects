@@ -7,6 +7,7 @@ import akka.actor.ActorRef
 import client.messages.TweetToServer
 import test.Hello
 import com.typesafe.config.ConfigFactory
+import common.Constants
 
 object Main {
 
@@ -18,8 +19,8 @@ object Main {
     val sampleSize: Int = 10
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val hostAddress: String = args(0)
-    val TwitterServerPort = 4030
-    val serverAddress: String = "akka.tcp://Project4aServer@" + hostAddress + ":" + TwitterServerPort + "/user" //args(0)
+    val constants = new Constants()
+    val serverAddress: String = "akka.tcp://Project4aServer@" + hostAddress + ":" + constants.SERVER_PORT  + "/user" //args(0)
     val offset = 24 * 3600 / clients
 
     val configString = """akka {
@@ -30,7 +31,7 @@ object Main {
     enabled-transports = ["akka.remote.netty.tcp"]
     netty.tcp {
       hostname = """ + localAddress + """
-      port = """ + TwitterServerPort + """
+      port = """ + constants.SERVER_PORT + """
     }
  }
 }"""
