@@ -24,3 +24,8 @@ case class PostDestroy() extends Messages
 case class Request(service: String, endPoint: String, tweet: String, followers: Int)
 
 case class Print() extends Messages
+
+//#Load Monitor Messages
+case class MeasureLoad() extends Messages
+case class InformLoad() extends Messages
+case class PrintLoad(load: Int) extends Messages

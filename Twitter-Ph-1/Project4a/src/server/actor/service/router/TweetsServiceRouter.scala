@@ -7,9 +7,14 @@ import server.actor.service.impl.TweetsService
 import akka.routing.Router
 import akka.routing.RoundRobinRoutingLogic
 import akka.routing.ActorRefRoutee
+import server.messages.InformLoad
+import server.messages.PrintLoad
+import server.messages.PostUpdate
+import server.messages.PostUpdate
 
 class TweetsServiceRouter(count: Int) extends Actor {
 
+  var load: Int = 0
   var router = {
     val routees = Vector.fill(count) {
       val r = context.actorOf(Props[TweetsService])
@@ -24,6 +29,15 @@ class TweetsServiceRouter(count: Int) extends Actor {
       val r = context.actorOf(Props[TweetsService])
       context watch r
       router = router.addRoutee(r)
+    case InformLoad =>
+      sender ! PrintLoad(load) 
+      load = 0
+    case PostUpdate(tweet, favorite) =>
+      load += favorite
+      router.route(PostUpdate, sender)
+    case w =>
+      load += 1
+      router.route(w, sender)
     case _ =>
       println("Unknown message received")
   }

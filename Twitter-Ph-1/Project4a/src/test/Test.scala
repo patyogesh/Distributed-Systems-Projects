@@ -27,8 +27,8 @@ object Test {
     val configuration = ConfigFactory.parseString(configString)
     val system = ActorSystem("Test", ConfigFactory.load(configuration))
     val actor = system.actorOf(Props[Master], "master");
-    //actor ! Send(args(0))
-    println(actor.path)
+    actor ! Send(args(0))
+    //println(actor.path)
   }
 }
 
