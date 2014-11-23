@@ -28,8 +28,8 @@ class RequestListenerRouter(serviceRouterMap: Map[String, ActorRef]) extends Act
   
   
   def receive = {
-    case Request(service, endPoint, tweet, favourites) =>
-      load += favourites
+    case Request(service, endPoint, tweet, followers) =>
+      load += followers
       router.route(Request, sender)
     case Print =>
       println("Load : " + load)

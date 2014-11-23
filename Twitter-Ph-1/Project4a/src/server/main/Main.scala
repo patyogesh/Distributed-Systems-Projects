@@ -35,21 +35,13 @@ object Main {
 
     val system = ActorSystem("Project4aServer", ConfigFactory.load(configuration))
 
-    val serviceRouterMap: Map[String, ActorRef] = createServiceRouterMap(system, cores)
-
-    val listenerRouter = system.actorOf(Props(new RequestListenerRouter(Map[String, ActorRef]() ++ serviceRouterMap)), name = "ProcessingRouter")
-
+    createServiceRouter(system, cores)
   }
 
-  def createServiceRouterMap(system: ActorSystem, cores: Int) = {
-    val serviceRouterMap = Map[String, ActorRef]()
-
-    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter()), name = "TimelineServiceRouter")
-    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter()), name = "TweetsServiceRouter")
-
-    serviceRouterMap + ("timeline" -> timelineServiceRouter)
-    serviceRouterMap + ("tweets" -> tweetsServiceRouter)
-
-    serviceRouterMap
+  def createServiceRouter(system: ActorSystem, cores: Int) = {
+    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores*2)), name = "TimelineServiceRouter")
+    println(timelineServiceRouter.path)
+    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores*2)), name = "TweetsServiceRouter")
+    println(tweetsServiceRouter.path)
   }
 }

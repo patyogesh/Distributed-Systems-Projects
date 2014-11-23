@@ -8,10 +8,10 @@ import akka.routing.Router
 import akka.routing.RoundRobinRoutingLogic
 import akka.actor.Terminated
 
-class TimelineServiceRouter extends Actor {
+class TimelineServiceRouter(count: Int) extends Actor {
 
   var router = {
-    val routees = Vector.fill(5) {
+    val routees = Vector.fill(count) {
       val r = context.actorOf(Props[TimelineService])
       context watch r
       ActorRefRoutee(r)

@@ -17,7 +17,7 @@ case class GetRetweets() extends Messages
 case class GetShow() extends Messages
 case class GetOembed() extends Messages
 case class PostRetweet() extends Messages
-case class PostUpdate(tweet: String) extends Messages
+case class PostUpdate(tweet: String, favorites: Int) extends Messages
 case class PostUpdateWithMedia() extends Messages
 case class PostDestroy() extends Messages
 //#

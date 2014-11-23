@@ -8,10 +8,10 @@ import akka.routing.Router
 import akka.routing.RoundRobinRoutingLogic
 import akka.routing.ActorRefRoutee
 
-class TweetsServiceRouter extends Actor {
+class TweetsServiceRouter(count: Int) extends Actor {
 
   var router = {
-    val routees = Vector.fill(5) {
+    val routees = Vector.fill(count) {
       val r = context.actorOf(Props[TweetsService])
       context watch r
       ActorRefRoutee(r)
