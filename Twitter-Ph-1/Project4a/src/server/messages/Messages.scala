@@ -21,3 +21,6 @@ case class PostUpdate(tweet: String) extends Messages
 case class PostUpdateWithMedia() extends Messages
 case class PostDestroy() extends Messages
 //#
+case class Request(service: String, endPoint: String, tweet: String, followers: Int)
+
+case class Print() extends Messages
