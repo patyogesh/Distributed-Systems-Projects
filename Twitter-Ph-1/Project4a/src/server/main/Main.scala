@@ -39,9 +39,11 @@ object Main {
   }
 
   def createServiceRouter(system: ActorSystem, cores: Int) = {
-    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores*2)), name = "TimelineServiceRouter")
-    println(timelineServiceRouter.path)
-    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores*2)), name = "TweetsServiceRouter")
-    println(tweetsServiceRouter.path)
+    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2)), name = "TimelineServiceRouter")
+    println("Timeline path : " + timelineServiceRouter.path)
+    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2)), name = "TweetsServiceRouter")
+    println("Tweets path : " + tweetsServiceRouter.path)
+    //val tweetsServiceRouter = system.actorOf(Props(new TweetsService()), name = "TweetsService")
+    //println("Tweet : " + tweetsServiceRouter.path)
   }
 }

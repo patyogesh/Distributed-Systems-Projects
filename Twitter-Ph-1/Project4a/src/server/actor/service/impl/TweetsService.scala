@@ -15,8 +15,9 @@ class TweetsService extends Actor {
       sender ! "Oembed Test"
     case PostRetweet =>
       sender ! "Posted Retweet Test"
-    case PostUpdate =>
-      sender ! "Update Test"
+    case PostUpdate(tweet, favorite) =>
+      println("Tweet Received : " + tweet)
+      //sender ! "Update Test"
     case PostUpdateWithMedia =>
       sender ! "Update with media Test"
     case PostDestroy =>

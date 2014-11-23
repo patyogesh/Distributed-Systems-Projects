@@ -18,7 +18,9 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
 
   def receive = {
     case TweetToServer =>
-      val server: ActorSelection = context.actorSelection(serverAddress + "/TweetsServiceRouter")
+      val servicePath = serverAddress + "/TweetsServiceRouter"
+      val server = context.actorSelection(servicePath)
+      println(servicePath + "," + server.pathString)
       server ! PostUpdate("Chumma Chumma dede!", followers)
     case _ =>
       println("Unknown Message")
