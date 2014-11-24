@@ -8,16 +8,24 @@ import server.messages.Request
 import common.ServiceRequest
 import server.messages.RegisterUser
 import common.UserProfile
+import scala.concurrent.duration._
+import java.util.concurrent.TimeUnit
+import server.messages.UpdateRegisteredUserCount
+import server.messages.UserCount
 
 class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
-
+	import context.dispatcher
+  
   var usersRegistered: Int = 0
+  val userRegistered = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, UpdateRegisteredUserCount)
   
   def receive = {
     case RegisterUser(userName: String) =>
       val userProfile: UserProfile = new UserProfile(userName, List[String](), List[String](), List[String]())
       userProfilesMap += userName -> userProfile
       usersRegistered += 1
+    case UpdateRegisteredUserCount =>
+      loadMonitor ! UserCount(usersRegistered)
     case _ => println("Unknown message received in User Registration service.")
   }
 }

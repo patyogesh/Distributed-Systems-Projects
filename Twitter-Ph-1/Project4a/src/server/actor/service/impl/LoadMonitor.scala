@@ -25,7 +25,6 @@ class LoadMonitor() extends Actor {
     case PrintLoad =>
       println("Server Load : " + serverLoad + " . Users Registered : " + userCount )
       serverLoad = 0
-      userCount = 0
     case UserCount(count: Int) =>
       userCount += count
     case _ =>
