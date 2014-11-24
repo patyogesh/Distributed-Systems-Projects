@@ -31,7 +31,7 @@ class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: 
       router.route(request, sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
-      val r = context.actorOf(Props[TimelineService])
+      val r = context.actorOf(Props(new TimelineService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       router = router.addRoutee(r)
     case _ =>

@@ -8,6 +8,9 @@ import client.messages.TweetToServer
 import test.Hello
 import com.typesafe.config.ConfigFactory
 import common.Constants
+import server.messages.Request
+import common.ServiceRequest
+import server.messages.RegisterUser
 
 object Main {
 
@@ -40,7 +43,11 @@ object Main {
 
     for (i <- 0 to clients - 1) {
       var client = system.actorOf(Props(new ClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset)), "Client" + i)
+      val servicePath = serverAddress + "/UserRegistrationRouter"
+      val server = system.actorSelection(servicePath)
+      server ! RegisterUser("Client"+i)
     }
+    
 
   }
 }

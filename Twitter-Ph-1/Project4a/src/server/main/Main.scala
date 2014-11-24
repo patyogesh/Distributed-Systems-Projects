@@ -12,6 +12,7 @@ import com.typesafe.config.ConfigFactory
 import common.Constants
 import common.UserProfile
 import common.Tweet
+import server.actor.service.router.UserRegistrationRouter
 
 object Main {
   def main(args: Array[String]) {
@@ -48,6 +49,8 @@ object Main {
   def createServiceRouter(system: ActorSystem, cores: Int, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) = {
     val loadMonitor: ActorRef = createLoadMonitor(system)
 
+    val userRegistrationRouter = system.actorOf(Props(new UserRegistrationRouter(cores * 2, userProfilesMap, tweetsMap)), name = "UserRegistrationRouter")
+    
     val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TimelineServiceRouter")
     val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TweetsServiceRouter")
 

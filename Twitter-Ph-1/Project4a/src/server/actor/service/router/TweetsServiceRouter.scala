@@ -33,7 +33,7 @@ class TweetsServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: sc
       router.route(request, sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
-      val r = context.actorOf(Props[TweetsService])
+      val r = context.actorOf(Props(new TweetsService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       router = router.addRoutee(r)
     case _ =>
