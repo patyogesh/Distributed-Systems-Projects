@@ -10,10 +10,8 @@ import akka.routing.RoundRobinRoutingLogic
 import server.actor.service.impl.UserRegistrationService
 import akka.actor.ActorRef
 import akka.actor.Terminated
-import server.messages.Request
 import common.ServiceRequest
-import server.messages.RegisterUser
-import server.messages.RegisterUser
+import common.RegisterUser
 
 class UserRegistrationRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
 

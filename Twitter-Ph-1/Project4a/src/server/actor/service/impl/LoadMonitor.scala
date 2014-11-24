@@ -4,12 +4,9 @@ import akka.actor.Actor
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
 import akka.actor.ActorRef
-import server.messages.MeasureLoad
-import server.messages.InformLoad
-import server.messages.PrintLoad
-import server.messages.RegisterService
-import server.messages.RegisterLoad
-import server.messages.UserCount
+import common.PrintLoad
+import common.RegisterLoad
+import common.UserCount
 
 class LoadMonitor() extends Actor {
   import context.dispatcher
@@ -23,9 +20,9 @@ class LoadMonitor() extends Actor {
   def receive = {
     case RegisterLoad(load) =>
       serverLoad += load
-      totalLoad  += load
+      totalLoad += load
     case PrintLoad =>
-      println("Server Load : " + serverLoad + " . Users Registered : " + userCount + " . Total load till now : " + totalLoad )
+      println("Server Load : " + serverLoad + " . Users Registered : " + userCount + " . Total load till now : " + totalLoad)
       serverLoad = 0
     case UserCount(count: Int) =>
       userCount += count

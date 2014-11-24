@@ -4,13 +4,11 @@ import akka.actor.ActorSystem
 import akka.actor.Props
 import client.actor.ClientActor
 import akka.actor.ActorRef
-import client.messages.TweetToServer
 import test.Hello
 import com.typesafe.config.ConfigFactory
 import common.Constants
-import server.messages.Request
 import common.ServiceRequest
-import server.messages.RegisterUsers
+import common.RegisterUsers
 
 object Main {
 
@@ -18,7 +16,7 @@ object Main {
 
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
     val numberOfTweetsPerDay = Array(9000, 4000, 3000, 2000, 2000, 1000, 1000, 1000, 1000, 1000)
-    val clients: Int = 2840000//00
+    val clients: Int = 2840000 //00
     val sampleSize: Int = 10
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val hostAddress: String = args(0)
@@ -43,7 +41,7 @@ object Main {
 
     val server = system.actorSelection(serverAddress + "/UserRegistrationService")
     server ! RegisterUsers(localAddress, clients)
-    
+
     for (i <- 0 to clients - 1) {
       var client = system.actorOf(Props(new ClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "Client" + i + "@" + localAddress)), "Client" + i + "@" + localAddress)
     }

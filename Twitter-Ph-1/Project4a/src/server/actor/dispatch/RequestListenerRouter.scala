@@ -7,10 +7,9 @@ import akka.routing.Router
 import akka.routing.RoundRobinRoutingLogic
 import akka.actor.Terminated
 import akka.actor.ActorRef
-import server.messages.Request
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import server.messages.Print
+import common.Print
 
 class RequestListenerRouter(serviceRouterMap: Map[String, ActorRef]) extends Actor {
 

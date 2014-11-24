@@ -7,13 +7,11 @@ import akka.routing.ActorRefRoutee
 import akka.routing.Router
 import akka.routing.RoundRobinRoutingLogic
 import akka.actor.Terminated
-import server.messages.InformLoad
-import server.messages.PrintLoad
 import akka.actor.ActorRef
-import server.messages.Request
 import common.ServiceRequest
 import common.UserProfile
 import common.Tweet
+import common.Request
 
 class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
 

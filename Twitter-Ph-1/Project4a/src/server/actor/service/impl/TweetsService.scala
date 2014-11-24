@@ -1,16 +1,17 @@
 package server.actor.service.impl
 
 import akka.actor.Actor
-import server.messages._
 import akka.actor.actorRef2Scala
 import akka.actor.ActorRef
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
 import common.ServiceRequest
-import server.messages.InformLoad
 import common.Tweet
 import common.UserProfile
 import java.lang.Class
+import common.Request
+import common.InformLoad
+import common.RegisterLoad
 
 class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
   import context.dispatcher
@@ -55,7 +56,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
   }
 
   def postRetweet(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
-	val uuid: String = tweetuuid
+    val uuid: String = tweetuuid
     val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
     uuid :: userProfile.userTimeline
@@ -63,24 +64,24 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     for (follower <- userProfile.followers) {
       uuid :: userProfilesMap.get(follower).get.homeTimeline
     }
-	//Register Load
-	load += userProfile.followers.length + 2
+    //Register Load
+    load += userProfile.followers.length + 2
   }
 
   def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
     //Push to tweet map
-    
+
     var done = false
     var uuid: String = ""
     while (!done) {
       uuid = java.util.UUID.randomUUID().toString()
-    
+
       if (tweetsMap.get(uuid) == None) {
-    	tweetsMap += uuid -> new Tweet(uuid, tweetText)
-    	done = true
+        tweetsMap += uuid -> new Tweet(uuid, tweetText)
+        done = true
       }
     }
-    
+
     val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
     uuid :: userProfile.userTimeline
@@ -97,6 +98,6 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
   }
 
   def postDestroy(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
-	tweetsMap.remove(tweetuuid)
+    tweetsMap.remove(tweetuuid)
   }
 }
