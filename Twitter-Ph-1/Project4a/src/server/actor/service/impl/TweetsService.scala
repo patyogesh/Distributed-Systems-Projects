@@ -69,14 +69,18 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
 
   def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
     //Push to tweet map
+    
     var done = false
     var uuid: String = ""
     while (!done) {
       uuid = java.util.UUID.randomUUID().toString()
-      if (tweetsMap.get(uuid) == null) {
-    	tweetsMap += uuid -> new Tweet(uuid, tweetText)   
+    
+      if (tweetsMap.get(uuid) == None) {
+    	tweetsMap += uuid -> new Tweet(uuid, tweetText)
+    	done = true
       }
     }
+    
     val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
     uuid :: userProfile.userTimeline
