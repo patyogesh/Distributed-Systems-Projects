@@ -30,7 +30,7 @@ class TweetsServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: sc
 
   def receive = {
     case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
-      router.route(Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String), sender)
+      router.route(Request(requestActorPath, endPoint, userName, tweetuuid, tweetText), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new TweetsService(loadMonitor, userProfilesMap, tweetsMap)))
