@@ -17,24 +17,24 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
   val updateLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, InformLoad)
 
   def receive = {
-    case Request(request: ServiceRequest) =>
-      if (request.endPoint equalsIgnoreCase ("GetMentionsTimeline"))
-        getMentionsTimeline(request)
-      else if (request.endPoint equalsIgnoreCase ("GetHomeTimeline"))
-        getHomeTimeline(request)
-      else if (request.endPoint equalsIgnoreCase ("GetUserTimeline"))
-        getUserTimeline(request)
+    case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+      if (endPoint equalsIgnoreCase ("GetMentionsTimeline"))
+        getMentionsTimeline(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("GetHomeTimeline"))
+        getHomeTimeline(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("GetUserTimeline"))
+        getUserTimeline(endPoint, userName, tweetuuid, tweetText)
     case InformLoad =>
       loadMonitor ! RegisterLoad(load)
     case _ => println("Unknowk message received in Timeline service.");
   }
 
-  def getMentionsTimeline(request: ServiceRequest) = {
+  def getMentionsTimeline(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
 	
   }
 
-  def getHomeTimeline(request: ServiceRequest): List[Tweet] = {
-    val userProfile: UserProfile = userProfilesMap.get(request.userName).get
+  def getHomeTimeline(endPoint: String, userName: String, tweetuuid: String, tweetText: String): List[Tweet] = {
+    val userProfile: UserProfile = userProfilesMap.get(userName).get
     val homeTimeline: List[String] = userProfile.homeTimeline 
 	val tweets: List[Tweet] = List()
     for(id <- homeTimeline){
@@ -43,8 +43,8 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
 	tweets
   }
 
-  def getUserTimeline(request: ServiceRequest): List[Tweet] = {
-	val userProfile: UserProfile = userProfilesMap.get(request.userName).get
+  def getUserTimeline(endPoint: String, userName: String, tweetuuid: String, tweetText: String): List[Tweet] = {
+	val userProfile: UserProfile = userProfilesMap.get(userName).get
     val userTimeline: List[String] = userProfile.userTimeline 
 	val tweets = List[Tweet]()
     for(id <- userTimeline){

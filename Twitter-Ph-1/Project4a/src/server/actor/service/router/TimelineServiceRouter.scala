@@ -27,8 +27,8 @@ class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: 
     Router(RoundRobinRoutingLogic(), routees)
   }
   def receive = {
-    case Request(request: ServiceRequest) =>
-      router.route(Request(request), sender)
+    case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+      router.route(Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new TimelineService(loadMonitor, userProfilesMap, tweetsMap)))

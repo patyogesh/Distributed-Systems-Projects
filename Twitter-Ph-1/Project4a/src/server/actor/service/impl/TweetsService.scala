@@ -7,10 +7,8 @@ import akka.actor.ActorRef
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
 import common.ServiceRequest
-import server.messages.Request
 import server.messages.InformLoad
 import common.Tweet
-import common.UserProfile
 import common.UserProfile
 import java.lang.Class
 
@@ -21,21 +19,21 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
   val updateLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, InformLoad)
 
   def receive = {
-    case Request(request: ServiceRequest) =>
-      if (request.endPoint equalsIgnoreCase ("GetRetweets"))
-        getRetweets(request)
-      else if (request.endPoint equalsIgnoreCase ("GetShow"))
-        getShow(request)
-      else if (request.endPoint equalsIgnoreCase ("GetOembed"))
-        getOembed(request)
-      else if (request.endPoint equalsIgnoreCase ("PostRetweet"))
-        postRetweet(request)
-      else if (request.endPoint equalsIgnoreCase ("PostUpdate"))
-        postUpdate(request)
-      else if (request.endPoint equalsIgnoreCase ("PostUpdateWithMedia"))
-        postUpdateWithMedia(request)
-      else if (request.endPoint equalsIgnoreCase ("PostDestroy"))
-        postDestroy(request)
+    case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+      if (endPoint equalsIgnoreCase ("GetRetweets"))
+        getRetweets(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("GetShow"))
+        getShow(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("GetOembed"))
+        getOembed(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("PostRetweet"))
+        postRetweet(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("PostUpdate"))
+        postUpdate(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("PostUpdateWithMedia"))
+        postUpdateWithMedia(endPoint, userName, tweetuuid, tweetText)
+      else if (endPoint equalsIgnoreCase ("PostDestroy"))
+        postDestroy(endPoint, userName, tweetuuid, tweetText)
       else
         println("Unknown end point")
     case InformLoad =>
@@ -44,21 +42,21 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     case _ => println("Unknown message received in Tweets service.")
   }
 
-  def getRetweets(request: ServiceRequest) = {
+  def getRetweets(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def getShow(request: ServiceRequest) = {
+  def getShow(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def getOembed(request: ServiceRequest) = {
+  def getOembed(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def postRetweet(request: ServiceRequest) = {
-	val uuid: String = request.tweetuuid
-    val userProfile: UserProfile = userProfilesMap.get(request.userName).get
+  def postRetweet(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+	val uuid: String = tweetuuid
+    val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
     uuid :: userProfile.userTimeline
     //Push to followers
@@ -67,17 +65,17 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     }
   }
 
-  def postUpdate(request: ServiceRequest) = {
+  def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
     //Push to tweet map
     var done = false
     var uuid: String = ""
     while (!done) {
       uuid = java.util.UUID.randomUUID().toString()
       if (tweetsMap.get(uuid) == null) {
-    	tweetsMap += uuid -> new Tweet(uuid, request.tweetText)   
+    	tweetsMap += uuid -> new Tweet(uuid, tweetText)   
       }
     }
-    val userProfile: UserProfile = userProfilesMap.get(request.userName).get
+    val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
     uuid :: userProfile.userTimeline
     //Push to followers
@@ -86,11 +84,11 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     }
   }
 
-  def postUpdateWithMedia(request: ServiceRequest) = {
+  def postUpdateWithMedia(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def postDestroy(request: ServiceRequest) = {
-	tweetsMap.remove(request.tweetuuid)
+  def postDestroy(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+	tweetsMap.remove(tweetuuid)
   }
 }

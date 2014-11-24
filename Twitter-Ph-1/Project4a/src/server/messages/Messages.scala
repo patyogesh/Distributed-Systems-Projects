@@ -5,7 +5,7 @@ import common.ServiceRequest
 
 sealed trait Messages
 
-case class Request(request: ServiceRequest) extends Messages
+case class Request(requestActorPath: String, endPoint: String, val userName: String, val tweetuuid: String, tweetText: String) extends Messages
 //#RequestListener messages
 case class Timeline() extends Messages
 case class Tweets() extends Messages

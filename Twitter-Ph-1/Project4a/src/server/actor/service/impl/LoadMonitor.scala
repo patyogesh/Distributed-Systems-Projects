@@ -19,7 +19,7 @@ class LoadMonitor() extends Actor {
   def receive = {
     case RegisterLoad(load) =>
       serverLoad += load
-    case PrintLoad() =>
+    case PrintLoad =>
       println(serverLoad)
       serverLoad = 0
     case _ =>
