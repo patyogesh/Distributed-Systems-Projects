@@ -42,7 +42,6 @@ object Main {
 
     for (i <- 0 to clients - 1) {
       var client = system.actorOf(Props(new ClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "Client" + i)), "Client" + i)
-
     }
 
   }

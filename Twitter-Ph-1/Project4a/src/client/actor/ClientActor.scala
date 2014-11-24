@@ -10,6 +10,7 @@ import client.messages.TweetToServer
 import server.messages.Request
 import test.Hello
 import server.messages.RegisterUser
+import common.ServiceRequest
 
 class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Int, name: String) extends Actor {
 
@@ -24,7 +25,7 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! PostUpdate("Chumma Chumma dede!", followers)
+      server ! new Request(new ServiceRequest("PostUpdate", name, "", "blah!"))
     case _ =>
       println("Unknown Message")
   }

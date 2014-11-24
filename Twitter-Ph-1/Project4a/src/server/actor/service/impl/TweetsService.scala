@@ -57,7 +57,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
   }
 
   def postRetweet(request: ServiceRequest) = {
-	val uuid: String = request.tweet.uuid
+	val uuid: String = request.tweetuuid
     val userProfile: UserProfile = userProfilesMap.get(request.userName).get
     //Push to user profile
     uuid :: userProfile.userTimeline
@@ -74,7 +74,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     while (!done) {
       uuid = java.util.UUID.randomUUID().toString()
       if (tweetsMap.get(uuid) == null) {
-    	tweetsMap += uuid -> request.tweet   
+    	tweetsMap += uuid -> new Tweet(uuid, request.tweetText)   
       }
     }
     val userProfile: UserProfile = userProfilesMap.get(request.userName).get
@@ -91,6 +91,6 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
   }
 
   def postDestroy(request: ServiceRequest) = {
-	tweetsMap.remove(request.tweet.uuid)
+	tweetsMap.remove(request.tweetuuid)
   }
 }

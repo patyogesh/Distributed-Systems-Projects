@@ -1,9 +1,10 @@
 package common
 
-class ServiceRequest(endpoint: String, username: String, tweetobj: Tweet) {
+class ServiceRequest(endpoint: String, username: String, tweetid: String, tweettext: String) {
 
+  
   val endPoint: String = endpoint 
   val userName: String = username
-  val tweet: Tweet = tweetobj
-  
+  val tweetuuid: String = tweetid
+  val tweetText: String = tweettext
 }
