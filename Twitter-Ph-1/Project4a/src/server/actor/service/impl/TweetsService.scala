@@ -63,6 +63,8 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     for (follower <- userProfile.followers) {
       uuid :: userProfilesMap.get(follower).get.homeTimeline
     }
+	//Register Load
+	load += userProfile.followers.length + 2
   }
 
   def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
@@ -82,6 +84,8 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     for (follower <- userProfile.followers) {
       uuid :: userProfilesMap.get(follower).get.homeTimeline
     }
+    //Register load
+    load += userProfile.followers.length + 2
   }
 
   def postUpdateWithMedia(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
