@@ -38,14 +38,14 @@ object Main {
 
     val system = ActorSystem("Project4aServer", ConfigFactory.load(configuration))
 
-    val userProfilesMap: Map[String, UserProfile] = Map()
-    val tweetsMap: Map[String, Tweet] = Map()
+    val userProfilesMap = scala.collection.mutable.Map[String, UserProfile]()
+    val tweetsMap = scala.collection.mutable.Map[String, Tweet]()
     
     
     createServiceRouter(system, cores, userProfilesMap, tweetsMap)
   }
 
-  def createServiceRouter(system: ActorSystem, cores: Int, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) = {
+  def createServiceRouter(system: ActorSystem, cores: Int, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) = {
     val loadMonitor: ActorRef = createLoadMonitor(system)
 
     val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TimelineServiceRouter")

@@ -15,7 +15,7 @@ import common.ServiceRequest
 import common.UserProfile
 import common.Tweet
 
-class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
+class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
 
   var load: Int = 0
   var router = {

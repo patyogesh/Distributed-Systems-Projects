@@ -28,7 +28,7 @@ class RequestListenerRouter(serviceRouterMap: Map[String, ActorRef]) extends Act
   
   
   def receive = {
-    case Request(service, endPoint, tweet, followers) =>
+    /*case Request(service, endPoint, tweet, followers) =>
       load += followers
       router.route(Request, sender)
     case Print =>
@@ -38,7 +38,7 @@ class RequestListenerRouter(serviceRouterMap: Map[String, ActorRef]) extends Act
       router = router.removeRoutee(a)
       val r = context.actorOf(Props[RequestListener])
       context watch r
-      router = router.addRoutee(r)
+      router = router.addRoutee(r)*/
     case _ =>
       println("Unknown message received")
   }

@@ -10,7 +10,7 @@ import common.ServiceRequest
 import common.UserProfile
 import common.Tweet
 
-class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
+class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
   var load: Int = 0
@@ -30,14 +30,26 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserPr
   }
 
   def getMentionsTimeline(request: ServiceRequest) = {
-
+	
   }
 
-  def getHomeTimeline(request: ServiceRequest) = {
-
+  def getHomeTimeline(request: ServiceRequest): List[Tweet] = {
+    val userProfile: UserProfile = userProfilesMap.get(request.userName).get
+    val homeTimeline: List[String] = userProfile.homeTimeline 
+	val tweets: List[Tweet] = List()
+    for(id <- homeTimeline){
+      tweets :+ tweetsMap.get(id).get
+    }
+	tweets
   }
 
-  def getUserTimeline(request: ServiceRequest) = {
-
+  def getUserTimeline(request: ServiceRequest): List[Tweet] = {
+	val userProfile: UserProfile = userProfilesMap.get(request.userName).get
+    val userTimeline: List[String] = userProfile.userTimeline 
+	val tweets = List[Tweet]()
+    for(id <- userTimeline){
+      tweets :+ tweetsMap.get(id).get
+    }
+	tweets
   }
 }
