@@ -24,13 +24,13 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
   import context.dispatcher
   val tweetTimeout = (24 * 3600 / tweetsPerDay) + offset
   val tweet = context.system.scheduler.schedule(0 milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
-
+  
+  
   def receive = {
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
-      println("tweeting : " + servicePath)
     case _ =>
       println("Unknown Message")
   }

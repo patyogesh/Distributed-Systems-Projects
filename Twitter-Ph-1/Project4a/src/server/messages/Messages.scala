@@ -2,6 +2,7 @@ package server.messages
 
 import akka.actor.ActorRef
 import common.ServiceRequest
+import common.Tweet
 
 sealed trait Messages
 
@@ -13,8 +14,11 @@ case class Tweets() extends Messages
 case class ProcessService() extends Messages
 //#Timeline messages
 case class GetMentionsTimeline() extends Messages
+case class ReturnMentionsTimeline(tweets: List[Tweet]) extends Messages
 case class GetUserTimeline() extends Messages
+case class ReturnUserTimeline(tweets: List[Tweet]) extends Messages
 case class GetHomeTimeline() extends Messages
+case class ReturnHomeTimeline(tweets: List[Tweet]) extends Messages
 //#Tweets messages
 case class GetRetweets() extends Messages
 case class GetShow() extends Messages
