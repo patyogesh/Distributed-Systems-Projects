@@ -49,7 +49,7 @@ object Main {
   def createServiceRouter(system: ActorSystem, cores: Int, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) = {
     val loadMonitor: ActorRef = createLoadMonitor(system)
 
-    val userRegistrationRouter = system.actorOf(Props(new UserRegistrationRouter(cores * 2, userProfilesMap, tweetsMap)), name = "UserRegistrationRouter")
+    val userRegistrationRouter = system.actorOf(Props(new UserRegistrationRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "UserRegistrationRouter")
     
     val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TimelineServiceRouter")
     val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TweetsServiceRouter")

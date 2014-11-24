@@ -15,11 +15,11 @@ import common.ServiceRequest
 import server.messages.RegisterUser
 import server.messages.RegisterUser
 
-class UserRegistrationRouter(count: Int, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
+class UserRegistrationRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
 
   var router = {
     val routees = Vector.fill(count) {
-      val r = context.actorOf(Props(new UserRegistrationService(userProfilesMap, tweetsMap)))
+      val r = context.actorOf(Props(new UserRegistrationService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       ActorRefRoutee(r)
     }
@@ -31,7 +31,7 @@ class UserRegistrationRouter(count: Int, userProfilesMap: scala.collection.mutab
       router.route(RegisterUser(userName), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
-      val r = context.actorOf(Props(new UserRegistrationService(userProfilesMap, tweetsMap)))
+      val r = context.actorOf(Props(new UserRegistrationService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       router = router.addRoutee(r)
     case _ =>

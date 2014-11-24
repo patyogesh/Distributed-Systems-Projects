@@ -9,12 +9,15 @@ import common.ServiceRequest
 import server.messages.RegisterUser
 import common.UserProfile
 
-class UserRegistrationService(userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
+class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
 
+  var usersRegistered: Int = 0
+  
   def receive = {
     case RegisterUser(userName: String) =>
       val userProfile: UserProfile = new UserProfile(userName, List[String](), List[String](), List[String]())
       userProfilesMap += userName -> userProfile
+      usersRegistered += 1
     case _ => println("Unknown message received in User Registration service.")
   }
 }
