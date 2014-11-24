@@ -17,8 +17,8 @@ object Main {
   def main(args: Array[String]) {
 
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
-    val numberOfTweetsPerDay = Array(9, 4, 3, 2, 2, 1, 1, 1, 1, 1)
-    val clients: Int = 1//28400//0000
+    val numberOfTweetsPerDay = Array(9000, 4000, 3000, 2000, 2000, 1000, 1000, 1000, 1000, 1000)
+    val clients: Int = 2840000//00
     val sampleSize: Int = 10
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val hostAddress: String = args(0)
