@@ -30,6 +30,7 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
+      println("tweeting : " + servicePath)
     case _ =>
       println("Unknown Message")
   }

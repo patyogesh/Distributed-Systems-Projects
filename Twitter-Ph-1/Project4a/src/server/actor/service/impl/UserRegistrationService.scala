@@ -33,6 +33,7 @@ class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: scala.coll
       usersRegistered += clients
     case UpdateRegisteredUserCount =>
       loadMonitor ! UserCount(usersRegistered)
+      usersRegistered = 0
     case _ => println("Unknown message received in User Registration service.")
   }
 }

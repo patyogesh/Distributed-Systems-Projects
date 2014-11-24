@@ -13,6 +13,9 @@ import common.Constants
 import common.UserProfile
 import common.Tweet
 import server.actor.service.router.UserRegistrationRouter
+import java.util.concurrent.ConcurrentHashMap
+import scala.collection._
+import scala.collection.convert.decorateAsScala._
 
 object Main {
   def main(args: Array[String]) {
@@ -39,9 +42,10 @@ object Main {
 
     val system = ActorSystem("Project4aServer", ConfigFactory.load(configuration))
 
-    val userProfilesMap = scala.collection.mutable.Map[String, UserProfile]()
-    val tweetsMap = scala.collection.mutable.Map[String, Tweet]()
-    
+    //val userProfilesMap = scala.collection.mutable.Map[String, UserProfile]()
+    //val tweetsMap = scala.collection.mutable.Map[String, Tweet]()
+    val userProfilesMap: concurrent.Map[String, UserProfile] = new ConcurrentHashMap().asScala
+    val tweetsMap: concurrent.Map[String, Tweet] = new ConcurrentHashMap().asScala
     
     createServiceRouter(system, cores, userProfilesMap, tweetsMap)
   }
