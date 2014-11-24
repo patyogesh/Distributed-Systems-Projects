@@ -9,7 +9,6 @@ import server.messages.PostUpdate
 import client.messages.TweetToServer
 import server.messages.Request
 import test.Hello
-import server.messages.RegisterUser
 import common.ServiceRequest
 import common.Constants
 
@@ -19,8 +18,9 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
   val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
   val server = context.actorSelection(serverAddress + "/UserRegistrationRouter")
   val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/"
-  server ! RegisterUser(name)
+  //server ! RegisterUser(name)
 
+  
   import context.dispatcher
   val tweetTimeout = (24 * 3600 / tweetsPerDay) + offset
   val tweet = context.system.scheduler.schedule(0 milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
