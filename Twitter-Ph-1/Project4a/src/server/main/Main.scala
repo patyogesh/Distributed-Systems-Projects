@@ -10,6 +10,8 @@ import server.actor.service.router.TimelineServiceRouter
 import server.actor.service.router.TweetsServiceRouter
 import com.typesafe.config.ConfigFactory
 import common.Constants
+import common.UserProfile
+import common.Tweet
 
 object Main {
   def main(args: Array[String]) {
@@ -36,16 +38,20 @@ object Main {
 
     val system = ActorSystem("Project4aServer", ConfigFactory.load(configuration))
 
-    createServiceRouter(system, cores)
+    val userProfilesMap: Map[String, UserProfile] = Map()
+    val tweetsMap: Map[String, Tweet] = Map()
+    
+    
+    createServiceRouter(system, cores, userProfilesMap, tweetsMap)
   }
 
-  def createServiceRouter(system: ActorSystem, cores: Int) = {
+  def createServiceRouter(system: ActorSystem, cores: Int, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) = {
     val loadMonitor: ActorRef = createLoadMonitor(system)
 
-    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2, loadMonitor)), name = "TimelineServiceRouter")
-    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2, loadMonitor)), name = "TweetsServiceRouter")
+    val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TimelineServiceRouter")
+    val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TweetsServiceRouter")
 
-    val routers = Array(timelineServiceRouter, tweetsServiceRouter)
+    //val routers = Array(timelineServiceRouter, tweetsServiceRouter)
 
   }
 

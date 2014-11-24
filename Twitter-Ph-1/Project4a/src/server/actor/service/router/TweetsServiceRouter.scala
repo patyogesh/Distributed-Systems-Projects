@@ -13,13 +13,15 @@ import akka.routing.Broadcast
 import akka.actor.ActorRef
 import server.messages.Request
 import common.ServiceRequest
+import common.UserProfile
+import common.Tweet
 
-class TweetsServiceRouter(count: Int, loadMonitor: ActorRef) extends Actor {
+class TweetsServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
 
   var load: Int = 0
   var router = {
     val routees = Vector.fill(count) {
-      val r = context.actorOf(Props(new TweetsService(loadMonitor)))
+      val r = context.actorOf(Props(new TweetsService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       ActorRefRoutee(r)
     }

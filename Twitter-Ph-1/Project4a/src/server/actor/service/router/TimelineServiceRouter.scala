@@ -12,13 +12,15 @@ import server.messages.PrintLoad
 import akka.actor.ActorRef
 import server.messages.Request
 import common.ServiceRequest
+import common.UserProfile
+import common.Tweet
 
-class TimelineServiceRouter(count: Int, loadMonitor: ActorRef) extends Actor {
+class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
 
   var load: Int = 0
   var router = {
     val routees = Vector.fill(count) {
-      val r = context.actorOf(Props(new TimelineService(loadMonitor)))
+      val r = context.actorOf(Props(new TimelineService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       ActorRefRoutee(r)
     }

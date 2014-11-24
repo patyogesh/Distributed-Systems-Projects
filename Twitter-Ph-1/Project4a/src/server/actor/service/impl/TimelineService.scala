@@ -7,8 +7,10 @@ import akka.actor.ActorRef
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
 import common.ServiceRequest
+import common.UserProfile
+import common.Tweet
 
-class TimelineService(loadMonitor: ActorRef) extends Actor {
+class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
   var load: Int = 0

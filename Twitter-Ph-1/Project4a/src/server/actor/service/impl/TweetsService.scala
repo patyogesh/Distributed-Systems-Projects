@@ -9,8 +9,10 @@ import java.util.concurrent.TimeUnit
 import common.ServiceRequest
 import server.messages.Request
 import server.messages.InformLoad
+import common.UserProfile
+import common.Tweet
 
-class TweetsService(loadMonitor: ActorRef) extends Actor {
+class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
   var load: Int = 0
@@ -32,6 +34,8 @@ class TweetsService(loadMonitor: ActorRef) extends Actor {
         postUpdateWithMedia(request)
       else if (request.endPoint equalsIgnoreCase ("PostDestroy"))
         postDestroy(request)
+        else 
+          println("Unknown end point")
     case InformLoad =>
       loadMonitor ! RegisterLoad(load)
       load = 0
@@ -43,7 +47,7 @@ class TweetsService(loadMonitor: ActorRef) extends Actor {
   }
 
   def getShow(request: ServiceRequest) = {
-
+	
   }
 
   def getOembed(request: ServiceRequest) = {
@@ -55,7 +59,7 @@ class TweetsService(loadMonitor: ActorRef) extends Actor {
   }
 
   def postUpdate(request: ServiceRequest) = {
-
+	
   }
 
   def postUpdateWithMedia(request: ServiceRequest) = {
