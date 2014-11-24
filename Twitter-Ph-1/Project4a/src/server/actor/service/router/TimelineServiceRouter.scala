@@ -28,13 +28,13 @@ class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: 
   }
   def receive = {
     case Request(request: ServiceRequest) =>
-      router.route(request, sender)
+      router.route(Request(request), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new TimelineService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       router = router.addRoutee(r)
     case _ =>
-      println("Unknown message received")
+      println("Unknown message received at Timeline service router.")
   }
 }

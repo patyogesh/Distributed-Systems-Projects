@@ -22,5 +22,7 @@ class LoadMonitor() extends Actor {
     case PrintLoad() =>
       println(serverLoad)
       serverLoad = 0
+    case _ =>
+      println("Unknown message received in Load Monitor.")
   }
 }

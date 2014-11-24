@@ -41,7 +41,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     case InformLoad =>
       loadMonitor ! RegisterLoad(load)
       load = 0
-    case _ => println("Unknown message received")
+    case _ => println("Unknown message received in Tweets service.")
   }
 
   def getRetweets(request: ServiceRequest) = {

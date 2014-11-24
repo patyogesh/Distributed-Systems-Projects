@@ -9,11 +9,14 @@ import server.messages.PostUpdate
 import client.messages.TweetToServer
 import server.messages.Request
 import test.Hello
+import server.messages.RegisterUser
 
-class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Int) extends Actor {
+class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Int, name: String) extends Actor {
+
+  val server = context.actorSelection(serverAddress + "/UserRegistrationRouter")
+  server ! RegisterUser(name)
 
   import context.dispatcher
-  
   val tweetTimeout = (24 * 3600 / tweetsPerDay) + offset
   val tweet = context.system.scheduler.schedule(0 milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
 

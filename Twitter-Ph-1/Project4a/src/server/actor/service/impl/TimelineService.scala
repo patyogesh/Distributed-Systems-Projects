@@ -26,7 +26,7 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
         getUserTimeline(request)
     case InformLoad =>
       loadMonitor ! RegisterLoad(load)
-    case _ => println("Unknowk message received");
+    case _ => println("Unknowk message received in Timeline service.");
   }
 
   def getMentionsTimeline(request: ServiceRequest) = {

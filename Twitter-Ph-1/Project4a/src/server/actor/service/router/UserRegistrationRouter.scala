@@ -28,13 +28,13 @@ class UserRegistrationRouter(count: Int, userProfilesMap: scala.collection.mutab
 
   def receive = {
     case RegisterUser(userName: String) =>
-      router.route(RegisterUser, sender)
+      router.route(RegisterUser(userName), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new UserRegistrationService(userProfilesMap, tweetsMap)))
       context watch r
       router = router.addRoutee(r)
     case _ =>
-      println("Unknown Message received.")
+      println("Unknown Message received in User registration router.")
   }
 }

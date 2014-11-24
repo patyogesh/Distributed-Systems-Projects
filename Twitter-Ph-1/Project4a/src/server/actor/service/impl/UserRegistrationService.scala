@@ -15,6 +15,6 @@ class UserRegistrationService(userProfilesMap: scala.collection.mutable.Map[Stri
     case RegisterUser(userName: String) =>
       val userProfile: UserProfile = new UserProfile(userName, List[String](), List[String](), List[String]())
       userProfilesMap += userName -> userProfile
-    case _ => println("Unknown message received")
+    case _ => println("Unknown message received in User Registration service.")
   }
 }

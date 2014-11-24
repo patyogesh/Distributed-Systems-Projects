@@ -30,13 +30,13 @@ class TweetsServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: sc
 
   def receive = {
     case Request(request: ServiceRequest) =>
-      router.route(request, sender)
+      router.route(Request(request), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new TweetsService(loadMonitor, userProfilesMap, tweetsMap)))
       context watch r
       router = router.addRoutee(r)
     case _ =>
-      println("Unknown message received")
+      println("Unknown message received at Tweets Service Router.")
   }
 }
