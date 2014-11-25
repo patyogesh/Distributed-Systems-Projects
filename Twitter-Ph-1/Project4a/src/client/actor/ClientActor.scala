@@ -17,8 +17,9 @@ import common.LoadUserTimelineResp
 import common.LoadUserTimelineReq
 import common.Tweet
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.Map
 
-class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Int, name: String, totalClients: Int) extends Actor {
+class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Double, name: String, totalClients: Int, timeMultiplier: Double) extends Actor {
 
   val constants = new Constants()
   val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
@@ -27,11 +28,11 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
   //server ! RegisterUser(name)
 
   import context.dispatcher
-  val tweetTimeout = ((24 * 3600) / tweetsPerDay)
+  val tweetTimeout = ((24 * 3600) / (tweetsPerDay * timeMultiplier))
   val tweet = context.system.scheduler.schedule((offset / tweetsPerDay) milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
-  val homeTimelineTimeout = ((24 * 3600) / 4)
+  val homeTimelineTimeout = ((24 * 3600) / (4 * timeMultiplier))
   val homeTimeline = context.system.scheduler.schedule((offset / 4) milliseconds, homeTimelineTimeout * 1000 milliseconds, self, LoadHomeTimelineReq)
-  val userTimelineTimeout = ((24 * 3600) / 1)
+  val userTimelineTimeout = ((24 * 3600) / (1 * timeMultiplier))
   val userTimeline = context.system.scheduler.schedule((offset / 1) milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
 
   def receive = {
@@ -40,20 +41,18 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
     case LoadHomeTimelineReq =>
-      //println("Sending home timeline request")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
     case LoadHomeTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
-      //println("Sending user timeline request")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetUserTimeline", name, "", "")
     case LoadUserTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server
     case _ =>
-      println("Unknown Message")
+      println("Unknown Message received at client")
   }
 }
