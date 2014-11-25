@@ -2,7 +2,7 @@ package common
 
 import akka.actor.ActorRef
 import common.ServiceRequest
-import common.Tweet
+import scala.collection.mutable.Map
 import scala.collection.mutable.ListBuffer
 
 sealed trait Messages
@@ -52,6 +52,6 @@ case class UpdateRegisteredUserCount() extends Messages
 case class TweetToServer() extends Messages
 case class LoadHomeTimeline() extends Messages
 case class LoadHomeTimelineReq() extends Messages
-case class LoadHomeTimelineResp(tweets: ListBuffer[Tweet]) extends Messages
+case class LoadHomeTimelineResp(tweets: Map[String, String]) extends Messages
 case class LoadUserTimelineReq() extends Messages
-case class LoadUserTimelineResp(tweets: ListBuffer[Tweet]) extends Messages
+case class LoadUserTimelineResp(tweets: Map[String, String]) extends Messages

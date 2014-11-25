@@ -44,14 +44,14 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
-    case LoadHomeTimelineResp(tweets: ListBuffer[Tweet]) =>
+    case LoadHomeTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
       //println("Sending user timeline request")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetUserTimeline", name, "", "")
-    case LoadUserTimelineResp(tweets: ListBuffer[Tweet]) =>
+    case LoadUserTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server
     case _ =>
       println("Unknown Message")
