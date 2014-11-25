@@ -1,7 +1,6 @@
 package common
 
 import akka.actor.ActorRef
-import common.ServiceRequest
 import scala.collection.mutable.Map
 import scala.collection.mutable.ListBuffer
 
