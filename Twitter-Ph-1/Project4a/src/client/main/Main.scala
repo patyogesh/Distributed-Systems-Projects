@@ -7,9 +7,9 @@ import akka.actor.ActorRef
 import com.typesafe.config.ConfigFactory
 import common.Constants
 import common.ServiceRequest
-import common.RegisterUsers
 import client.actor.ClientActorFactory
 import client.actor.PeakActor
+import common.RegisterUsers
 
 object Main {
 
@@ -24,7 +24,7 @@ object Main {
     //default values
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
     val numberOfTweetsPerDay = Array(9000, 4000, 3000, 2000, 2000, 1000, 1000, 1000, 1000, 1000)
-    var clients: Int = 250000 //2840000 //00000
+    var clients: Int = 50000//2840000 //00000
     val sampleSize: Int = 10
 
     //Scale tweets

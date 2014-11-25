@@ -13,11 +13,12 @@ class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: 
 
   def receive = {
     case Start =>
-      println("creating spike load.")
+      
       val spike = context.system.scheduler.schedule((startTime * 1000) milliseconds, (interval * 1000) milliseconds, self, TweetToServer)
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
+      println("creating spike load.")
       server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
     case _ =>
       println("Unknown message received in Peak actor")
