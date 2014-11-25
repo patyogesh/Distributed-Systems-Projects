@@ -9,6 +9,7 @@ import com.typesafe.config.ConfigFactory
 import common.Constants
 import common.ServiceRequest
 import common.RegisterUsers
+import client.actor.ClientActorFactory
 
 object Main {
 
@@ -35,7 +36,7 @@ object Main {
 
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    val serverAddress: String = "akka.tcp://Project4aServer@" + hostAddress + ":" + constants.SERVER_PORT + "/user" //args(0)
+    val serverAddress: String = "akka.tcp://Project4aServer@" + hostAddress + ":" + constants.SERVER_PORT + "/user"
     
     //Scale time
     val offset = (24 * 3600) / (clients*timeMultiplier)
@@ -55,12 +56,14 @@ object Main {
     val configuration = ConfigFactory.parseString(configString)
     val system = ActorSystem("Project4aClient", ConfigFactory.load(configuration))
 
+    val clientActorFactory = system.actorOf(Props(new ClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier)), "ClientActorFactory")
+    val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/ClientActorFactory"
+    
     val server = system.actorSelection(serverAddress + "/UserRegistrationService")
-    server ! RegisterUsers(localAddress, clients)
+    server ! RegisterUsers(localAddress, clients, clientFactoryPath)
 
-    for (i <- 0 to clients - 1) {
-      var client = system.actorOf(Props(new ClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "Client" + i + "@" + localAddress, clients, timeMultiplier)), "Client" + i + "@" + localAddress)
-    }
+    
+    
 
   }
 }

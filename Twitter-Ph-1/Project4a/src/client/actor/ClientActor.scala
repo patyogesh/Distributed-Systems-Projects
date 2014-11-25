@@ -18,6 +18,7 @@ import common.LoadUserTimelineReq
 import common.Tweet
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
+import common.Start
 
 class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Double, name: String, totalClients: Int, timeMultiplier: Double) extends Actor {
 
@@ -25,17 +26,17 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
   val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
   val server = context.actorSelection(serverAddress + "/UserRegistrationRouter")
   val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/"
-  //server ! RegisterUser(name)
 
   import context.dispatcher
-  val tweetTimeout = ((24 * 3600) / (tweetsPerDay * timeMultiplier))
-  val tweet = context.system.scheduler.schedule((offset / tweetsPerDay) milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
-  val homeTimelineTimeout = ((24 * 3600) / (4 * timeMultiplier))
-  val homeTimeline = context.system.scheduler.schedule((offset / 4) milliseconds, homeTimelineTimeout * 1000 milliseconds, self, LoadHomeTimelineReq)
-  val userTimelineTimeout = ((24 * 3600) / (1 * timeMultiplier))
-  val userTimeline = context.system.scheduler.schedule((offset / 1) milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
 
   def receive = {
+    case Start =>
+      val tweetTimeout = ((24 * 3600) / (tweetsPerDay * timeMultiplier))
+      val tweet = context.system.scheduler.schedule((offset / tweetsPerDay) milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
+      val homeTimelineTimeout = ((24 * 3600) / (4 * timeMultiplier))
+      val homeTimeline = context.system.scheduler.schedule((offset / 4) milliseconds, homeTimelineTimeout * 1000 milliseconds, self, LoadHomeTimelineReq)
+      val userTimelineTimeout = ((24 * 3600) / (1 * timeMultiplier))
+      val userTimeline = context.system.scheduler.schedule((offset / 1) milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)

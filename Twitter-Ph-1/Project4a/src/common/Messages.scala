@@ -44,7 +44,7 @@ case class RegisterService(service: ActorRef) extends Messages
 case class UserCount(count: Int) extends Messages
 //#User Registration Messages
 case class RegisterUser(userName: String) extends Messages
-case class RegisterUsers(ip: String, clients: Int) extends Messages
+case class RegisterUsers(ip: String, clients: Int, clientFactoryPath: String) extends Messages
 case class UpdateRegisteredUserCount() extends Messages
 
 
@@ -55,3 +55,4 @@ case class LoadHomeTimelineReq() extends Messages
 case class LoadHomeTimelineResp(tweets: Map[String, String]) extends Messages
 case class LoadUserTimelineReq() extends Messages
 case class LoadUserTimelineResp(tweets: Map[String, String]) extends Messages
+case class Start() extends Messages
