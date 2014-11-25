@@ -72,6 +72,8 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
   }
 
   def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+    try{
+      
     //Push to tweet map
     var done = false
     var uuid: String = ""
@@ -92,6 +94,10 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
     }
     //Register load
     load += userProfile.followers.length + 2
+    
+    } catch {
+      case e: java.util.NoSuchElementException => println("Username : " + userName)
+    }
   }
 
   def postUpdateWithMedia(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {

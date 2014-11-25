@@ -44,7 +44,7 @@ class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: Map[String
         val userProfile: UserProfile = new UserProfile(peakActorName + "@" + ip, new ListBuffer[String], new ListBuffer[String], new ListBuffer[String])
         userProfilesMap += peakActorName + "@" + ip -> userProfile
         val followerList: ListBuffer[String] = userProfile.followers
-        for(i <- 0 to Math.min(clients-1, peakActorFollowersCount))
+        for(i <- 0 to Math.min(clients-1, peakActorFollowersCount-1))
           followerList += "Client" + i + "@" + ip
         usersRegistered += 1
       }
