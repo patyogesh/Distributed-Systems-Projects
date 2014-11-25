@@ -19,7 +19,7 @@ class LoadMonitor() extends Actor {
   var serverTweetLoad: Int = 0
   var serverTimelineLoad: Int = 0
   val printLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, PrintLoad)
-  
+
   def receive = {
     case RegisterLoad(load) =>
       serverLoad += load
@@ -31,9 +31,9 @@ class LoadMonitor() extends Actor {
       serverTimelineLoad += load
       totalLoad += load
     case PrintLoad =>
-      println("Total Server Load till now : " + totalLoad  + " . Users Registered : " + userCount + " . Server Tweets Load : " + serverTweetLoad + " . Server Timeline Load : " + serverTimelineLoad )
-      serverTweetLoad  = 0
-      serverTimelineLoad = 0 
+      println("Total Server Load till now : " + totalLoad + " . Users Registered : " + userCount + " . Server Tweets Load : " + serverTweetLoad + " . Server Timeline Load : " + serverTimelineLoad)
+      serverTweetLoad = 0
+      serverTimelineLoad = 0
     case UserCount(count: Int) =>
       userCount += count
     case _ =>

@@ -2,5 +2,4 @@ package constants
 
 class Constants {
 
-  
 }

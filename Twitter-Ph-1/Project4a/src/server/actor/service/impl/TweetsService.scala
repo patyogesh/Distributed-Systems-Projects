@@ -72,29 +72,29 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
   }
 
   def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
-    try{
-      
-    //Push to tweet map
-    var done = false
-    var uuid: String = ""
-    while (!done) {
-      uuid = java.util.UUID.randomUUID().toString()
+    try {
 
-      if (tweetsMap.get(uuid) == None) {
-        tweetsMap += uuid -> new Tweet(uuid, tweetText)
-        done = true
+      //Push to tweet map
+      var done = false
+      var uuid: String = ""
+      while (!done) {
+        uuid = java.util.UUID.randomUUID().toString()
+
+        if (tweetsMap.get(uuid) == None) {
+          tweetsMap += uuid -> new Tweet(uuid, tweetText)
+          done = true
+        }
       }
-    }
-    val userProfile: UserProfile = userProfilesMap.get(userName).get
-    //Push to user profile
-    uuid +=: userProfile.userTimeline
-    //Push to followers
-    for (follower <- userProfile.followers) {
-      uuid +=: userProfilesMap.get(follower).get.homeTimeline
-    }
-    //Register load
-    load += userProfile.followers.length + 2
-    
+      val userProfile: UserProfile = userProfilesMap.get(userName).get
+      //Push to user profile
+      uuid +=: userProfile.userTimeline
+      //Push to followers
+      for (follower <- userProfile.followers) {
+        uuid +=: userProfilesMap.get(follower).get.homeTimeline
+      }
+      //Register load
+      load += userProfile.followers.length + 2
+
     } catch {
       case e: java.util.NoSuchElementException => println("Username : " + userName)
     }

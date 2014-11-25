@@ -24,8 +24,7 @@ class RequestListenerRouter(serviceRouterMap: Map[String, ActorRef]) extends Act
     Router(RoundRobinRoutingLogic(), routees)
   }
   var load: Int = 0
-  
-  
+
   def receive = {
     /*case Request(service, endPoint, tweet, followers) =>
       load += followers

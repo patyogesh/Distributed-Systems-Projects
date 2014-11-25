@@ -65,7 +65,7 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserPr
     val tweets = Map[String, String]()
     var i = 1
     for (id <- userTimeline if i <= numberOfTweetsPerRequest) {
-      tweets += id -> tweetsMap.get(id).get.text 
+      tweets += id -> tweetsMap.get(id).get.text
       i += 1
     }
     load += tweets.size

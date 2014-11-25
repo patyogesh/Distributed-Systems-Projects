@@ -20,7 +20,7 @@ import scala.collection.convert.decorateAsScala._
 object Main {
   def main(args: Array[String]) {
     val constants = new Constants()
-    
+
     val hostAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
 
     val configString = """akka {
@@ -42,24 +42,20 @@ object Main {
 
     val system = ActorSystem("Project4aServer", ConfigFactory.load(configuration))
 
-    //val userProfilesMap = scala.collection.mutable.Map[String, UserProfile]()
-    //val tweetsMap = scala.collection.mutable.Map[String, Tweet]()
     val userProfilesMap: concurrent.Map[String, UserProfile] = new ConcurrentHashMap().asScala
     val tweetsMap: concurrent.Map[String, Tweet] = new ConcurrentHashMap().asScala
-    
+
     createServiceRouter(system, cores, userProfilesMap, tweetsMap)
   }
 
   def createServiceRouter(system: ActorSystem, cores: Int, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) = {
     val loadMonitor: ActorRef = createLoadMonitor(system)
 
-    //val userRegistrationRouter = system.actorOf(Props(new UserRegistrationRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "UserRegistrationRouter")
-    val userRegistrationService = system.actorOf(Props(new UserRegistrationService(loadMonitor, userProfilesMap, tweetsMap)), name = "UserRegistrationService")
-    
+    val userRegistrationRouter = system.actorOf(Props(new UserRegistrationRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "UserRegistrationRouter")
+    //val userRegistrationService = system.actorOf(Props(new UserRegistrationService(loadMonitor, userProfilesMap, tweetsMap)), name = "UserRegistrationService")
+
     val timelineServiceRouter = system.actorOf(Props(new TimelineServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TimelineServiceRouter")
     val tweetsServiceRouter = system.actorOf(Props(new TweetsServiceRouter(cores * 2, loadMonitor, userProfilesMap, tweetsMap)), name = "TweetsServiceRouter")
-
-    //val routers = Array(timelineServiceRouter, tweetsServiceRouter)
 
   }
 

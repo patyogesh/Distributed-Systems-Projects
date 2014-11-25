@@ -4,7 +4,6 @@ import akka.actor.ActorSystem
 import akka.actor.Props
 import client.actor.ClientActor
 import akka.actor.ActorRef
-import test.Hello
 import com.typesafe.config.ConfigFactory
 import common.Constants
 import common.ServiceRequest
@@ -21,15 +20,15 @@ object Main {
     val timeMultiplier: Double = args(1).toDouble
     val userCountMultiplier: Double = args(2).toDouble
     val tweetsCountMultiplier: Double = args(3).toDouble
-    
+
     //default values
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
     val numberOfTweetsPerDay = Array(9000, 4000, 3000, 2000, 2000, 1000, 1000, 1000, 1000, 1000)
-    var clients: Int = 250000//2840000 //00000
+    var clients: Int = 250000 //2840000 //00000
     val sampleSize: Int = 10
 
     //Scale tweets
-    for (i <- 0 to numberOfTweetsPerDay.length-1)
+    for (i <- 0 to numberOfTweetsPerDay.length - 1)
       numberOfTweetsPerDay(i) = (numberOfTweetsPerDay(i) * tweetsCountMultiplier).toInt
 
     //Scale User count
@@ -38,9 +37,9 @@ object Main {
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
     val serverAddress: String = "akka.tcp://Project4aServer@" + hostAddress + ":" + constants.SERVER_PORT + "/user"
-    
+
     //Scale time
-    val offset = (24 * 3600) / (clients*timeMultiplier)
+    val offset = (24 * 3600) / (clients * timeMultiplier)
 
     val configString = """akka {
   actor {
@@ -66,20 +65,17 @@ object Main {
       val interval: Int = args(5).toInt
       peakActorFollowersCount = args(6).toInt
       val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/PeakActor"
-      peakActor = system.actorOf(Props(new PeakActor(startTime, interval, serverAddress, selfPath, "PeakActor")), "PeakActor")
+      peakActor = system.actorOf(Props(new PeakActor(startTime, interval, serverAddress, selfPath, "PeakActor@" + localAddress)), "PeakActor")
       peakActorName = "PeakActor"
     } catch {
       case ex: java.lang.ArrayIndexOutOfBoundsException => //
     }
-    
+
     val clientActorFactory = system.actorOf(Props(new ClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier, peakActor)), "ClientActorFactory")
     val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/ClientActorFactory"
-    
-    val server = system.actorSelection(serverAddress + "/UserRegistrationService")
-    server ! RegisterUsers(localAddress, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
 
-    
-    
+    val server = system.actorSelection(serverAddress + "/UserRegistrationRouter")
+    server ! RegisterUsers(localAddress, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
 
   }
 }

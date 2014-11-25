@@ -14,7 +14,7 @@ class ClientActorFactory(clients: Int, serverAddress: String, followers: Array[I
   }
   def receive = {
     case Start =>
-      if(peakActor != null)
+      if (peakActor != null)
         peakActor ! Start
       clientActors.foreach(ref => ref ! Start)
     case _ =>

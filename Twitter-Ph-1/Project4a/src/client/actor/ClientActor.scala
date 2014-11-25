@@ -4,7 +4,6 @@ import akka.actor.Actor
 import akka.actor.ActorSelection
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import test.Hello
 import common.ServiceRequest
 import common.Constants
 import common.TweetToServer

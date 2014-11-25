@@ -21,7 +21,7 @@ class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: Map[String
   import context.dispatcher
 
   var usersRegistered: Int = 0
-  val userRegistered = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, UpdateRegisteredUserCount)
+  val useRegistered = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, UpdateRegisteredUserCount)
 
   def receive = {
     case RegisterUser(userName: String) =>
@@ -40,15 +40,15 @@ class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: Map[String
       }
       usersRegistered += clients
       //Register Peak user profile for spike
-      if(peakActorName != ""){
+      if (peakActorName != "") {
         val userProfile: UserProfile = new UserProfile(peakActorName + "@" + ip, new ListBuffer[String], new ListBuffer[String], new ListBuffer[String])
         userProfilesMap += peakActorName + "@" + ip -> userProfile
         val followerList: ListBuffer[String] = userProfile.followers
-        for(i <- 0 to Math.min(clients-1, peakActorFollowersCount-1))
+        for (i <- 0 to Math.min(clients - 1, peakActorFollowersCount - 1))
           followerList += "Client" + i + "@" + ip
         usersRegistered += 1
       }
-      
+
       val factory = context.actorSelection(clientFactoryPath)
       factory ! Start
     case UpdateRegisteredUserCount =>
