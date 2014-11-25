@@ -7,6 +7,8 @@ import akka.actor.ActorRef
 import common.PrintLoad
 import common.RegisterLoad
 import common.UserCount
+import common.RegisterTweetLoad
+import common.RegisterTimelineLoad
 
 class LoadMonitor() extends Actor {
   import context.dispatcher
@@ -14,16 +16,24 @@ class LoadMonitor() extends Actor {
   var serverLoad: Int = 0
   var totalLoad: Int = 0
   var userCount: Int = 0
+  var serverTweetLoad: Int = 0
+  var serverTimelineLoad: Int = 0
   val printLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, PrintLoad)
-  //val usersRegistered = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, PrintUserRegisteredCount)
-
+  
   def receive = {
     case RegisterLoad(load) =>
       serverLoad += load
       totalLoad += load
+    case RegisterTweetLoad(load) =>
+      serverTweetLoad += load
+      totalLoad += load
+    case RegisterTimelineLoad(load) =>
+      serverTimelineLoad += load
+      totalLoad += load
     case PrintLoad =>
-      println("Server Load : " + serverLoad + " . Users Registered : " + userCount + " . Total load till now : " + totalLoad)
-      serverLoad = 0
+      println("Total Server Load till now : " + totalLoad  + " . Users Registered : " + userCount + " . Server Tweets Load : " + serverTweetLoad + " . Server Timeline Load : " + serverTimelineLoad )
+      serverTweetLoad  = 0
+      serverTimelineLoad = 0 
     case UserCount(count: Int) =>
       userCount += count
     case _ =>

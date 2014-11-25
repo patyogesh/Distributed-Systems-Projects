@@ -15,6 +15,7 @@ import common.ReturnHomeTimeline
 import common.ReturnUserTimeline
 import common.LoadHomeTimelineResp
 import common.LoadUserTimelineResp
+import common.RegisterTimelineLoad
 
 class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
   import context.dispatcher
@@ -33,7 +34,7 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
       else if (endPoint equalsIgnoreCase ("GetUserTimeline"))
         getUserTimeline(requestActorPath, endPoint, userName, tweetuuid, tweetText)
     case InformLoad =>
-      loadMonitor ! RegisterLoad(load)
+      loadMonitor ! RegisterTimelineLoad(load)
       load = 0
     case _ => println("Unknowk message received in Timeline service.");
   }
