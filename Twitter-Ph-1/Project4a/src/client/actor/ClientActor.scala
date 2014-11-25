@@ -15,6 +15,7 @@ import common.LoadHomeTimelineResp
 import common.LoadHomeTimelineReq
 import common.LoadUserTimelineResp
 import common.LoadUserTimelineReq
+import common.Tweet
 
 class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Int, name: String, totalClients: Int) extends Actor {
 
@@ -29,8 +30,8 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
   val tweet = context.system.scheduler.schedule((offset / tweetsPerDay) milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
   val homeTimelineTimeout = ((24 * 3600) / 4)
   val homeTimeline = context.system.scheduler.schedule((offset / 4) milliseconds, homeTimelineTimeout * 1000 milliseconds, self, LoadHomeTimelineReq)
-  val userTimelineTimeout = ((24 * 3600) / 1)
-  val userTimeline = context.system.scheduler.schedule((offset / 1) milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
+  //val userTimelineTimeout = ((24 * 3600) / 1)
+  //val userTimeline = context.system.scheduler.schedule((offset / 1) milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
 
   def receive = {
     case TweetToServer =>
@@ -42,13 +43,13 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
-    case LoadHomeTimelineResp =>
+    case LoadHomeTimelineResp(tweet: List[Tweet]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
-    case LoadUserTimelineResp =>
+    case LoadUserTimelineResp(tweet: List[Tweet]) =>
     //Trash Received tweets from server
     case _ =>
       println("Unknown Message")
