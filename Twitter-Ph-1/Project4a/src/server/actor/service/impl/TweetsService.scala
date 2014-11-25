@@ -12,7 +12,11 @@ import java.lang.Class
 import common.Request
 import common.InformLoad
 import common.RegisterLoad
+<<<<<<< HEAD
 import scala.collection.mutable.ListBuffer
+=======
+import common.RegisterTweetLoad
+>>>>>>> 424457041921df046086aeb6b5c1273b34f3d051
 
 class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
   import context.dispatcher
@@ -39,7 +43,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
       else
         println("Unknown end point")
     case InformLoad =>
-      loadMonitor ! RegisterLoad(load)
+      loadMonitor ! RegisterTweetLoad(load)
       load = 0
     case _ => println("Unknown message received in Tweets service.")
   }
