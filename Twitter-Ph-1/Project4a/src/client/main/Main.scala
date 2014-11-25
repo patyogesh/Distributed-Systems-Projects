@@ -16,7 +16,7 @@ object Main {
 
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
     val numberOfTweetsPerDay = Array(9000, 4000, 3000, 2000, 2000, 1000, 1000, 1000, 1000, 1000)
-    val clients: Int = 2840000 //00
+    val clients: Int = 100//284000000
     val sampleSize: Int = 10
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val hostAddress: String = args(0)

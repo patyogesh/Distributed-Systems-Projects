@@ -13,6 +13,8 @@ import common.RegisterLoad
 import common.InformLoad
 import common.ReturnHomeTimeline
 import common.ReturnUserTimeline
+import common.LoadHomeTimelineResp
+import common.LoadUserTimelineResp
 
 class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
   import context.dispatcher
@@ -51,7 +53,7 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
     }
     load += tweets.length
     val client = context.actorSelection(requestActorPath)
-    client ! new ReturnHomeTimeline(tweets)
+    client ! new LoadHomeTimelineResp(tweets)
   }
 
   def getUserTimeline(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String): Unit = {
@@ -65,6 +67,6 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
     }
     load += tweets.length
     val client = context.actorSelection(requestActorPath)
-    client ! new ReturnUserTimeline(tweets)
+    client ! new LoadUserTimelineResp(tweets)
   }
 }
