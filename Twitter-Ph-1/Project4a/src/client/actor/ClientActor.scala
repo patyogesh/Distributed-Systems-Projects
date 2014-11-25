@@ -30,8 +30,8 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
   val tweet = context.system.scheduler.schedule((offset / tweetsPerDay) milliseconds, tweetTimeout * 1000 milliseconds, self, TweetToServer)
   val homeTimelineTimeout = ((24 * 3600) / 4)
   val homeTimeline = context.system.scheduler.schedule((offset / 4) milliseconds, homeTimelineTimeout * 1000 milliseconds, self, LoadHomeTimelineReq)
-  //val userTimelineTimeout = ((24 * 3600) / 1)
-  //val userTimeline = context.system.scheduler.schedule((offset / 1) milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
+  val userTimelineTimeout = ((24 * 3600) / 1)
+  val userTimeline = context.system.scheduler.schedule((offset / 1) milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
 
   def receive = {
     case TweetToServer =>
@@ -39,17 +39,18 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
     case LoadHomeTimelineReq =>
-      //Send GET request to Server for <USER>
+      //println("Sending home timeline request")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
-    case LoadHomeTimelineResp(tweet: List[Tweet]) =>
+    case LoadHomeTimelineResp(tweets: List[Tweet]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
+      //println("Sending user timeline request")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
-    case LoadUserTimelineResp(tweet: List[Tweet]) =>
+      server ! new Request(selfPath + name, "GetUserTimeline", name, "", "")
+    case LoadUserTimelineResp(tweets: List[Tweet]) =>
     //Trash Received tweets from server
     case _ =>
       println("Unknown Message")
