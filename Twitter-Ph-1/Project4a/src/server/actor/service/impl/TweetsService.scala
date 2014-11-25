@@ -12,6 +12,7 @@ import java.lang.Class
 import common.Request
 import common.InformLoad
 import common.RegisterLoad
+import scala.collection.mutable.ListBuffer
 
 class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
   import context.dispatcher
@@ -59,10 +60,10 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     val uuid: String = tweetuuid
     val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
-    uuid :: userProfile.userTimeline
+    uuid +=: userProfile.userTimeline
     //Push to followers
     for (follower <- userProfile.followers) {
-      uuid :: userProfilesMap.get(follower).get.homeTimeline
+      uuid +=: userProfilesMap.get(follower).get.homeTimeline
     }
     //Register Load
     load += userProfile.followers.length + 2
@@ -70,7 +71,6 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
 
   def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
     //Push to tweet map
-
     var done = false
     var uuid: String = ""
     while (!done) {
@@ -81,13 +81,12 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
         done = true
       }
     }
-
     val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
-    uuid :: userProfile.userTimeline
+    uuid +=: userProfile.userTimeline
     //Push to followers
     for (follower <- userProfile.followers) {
-      uuid :: userProfilesMap.get(follower).get.homeTimeline
+      uuid +=: userProfilesMap.get(follower).get.homeTimeline
     }
     //Register load
     load += userProfile.followers.length + 2

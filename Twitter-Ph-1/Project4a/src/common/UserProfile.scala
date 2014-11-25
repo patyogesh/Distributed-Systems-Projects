@@ -1,9 +1,11 @@
 package common
 
-class UserProfile(name: String, follower: List[String], home: List[String], user: List[String]) {
+import scala.collection.mutable.ListBuffer
+
+class UserProfile(name: String, follower: ListBuffer[String], home: ListBuffer[String], user: ListBuffer[String]) {
 
   val username: String = name
-  val followers: List[String] = follower
-  val homeTimeline: List[String] = home
-  val userTimeline: List[String] = user
+  val followers = follower
+  val homeTimeline = home
+  val userTimeline = user
 }

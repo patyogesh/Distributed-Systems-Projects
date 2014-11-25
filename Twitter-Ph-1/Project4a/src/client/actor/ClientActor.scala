@@ -16,6 +16,7 @@ import common.LoadHomeTimelineReq
 import common.LoadUserTimelineResp
 import common.LoadUserTimelineReq
 import common.Tweet
+import scala.collection.mutable.ListBuffer
 
 class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Int, name: String, totalClients: Int) extends Actor {
 
@@ -43,14 +44,14 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
-    case LoadHomeTimelineResp(tweets: List[Tweet]) =>
+    case LoadHomeTimelineResp(tweets: ListBuffer[Tweet]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
       //println("Sending user timeline request")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetUserTimeline", name, "", "")
-    case LoadUserTimelineResp(tweets: List[Tweet]) =>
+    case LoadUserTimelineResp(tweets: ListBuffer[Tweet]) =>
     //Trash Received tweets from server
     case _ =>
       println("Unknown Message")

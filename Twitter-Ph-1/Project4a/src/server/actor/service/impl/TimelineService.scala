@@ -15,6 +15,7 @@ import common.ReturnHomeTimeline
 import common.ReturnUserTimeline
 import common.LoadHomeTimelineResp
 import common.LoadUserTimelineResp
+import scala.collection.mutable.ListBuffer
 
 class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
   import context.dispatcher
@@ -44,11 +45,11 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
 
   def getHomeTimeline(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String): Unit = {
     val userProfile: UserProfile = userProfilesMap.get(userName).get
-    val homeTimeline: List[String] = userProfile.homeTimeline
-    val tweets: List[Tweet] = List()
+    val homeTimeline: ListBuffer[String] = userProfile.homeTimeline
+    val tweets = new ListBuffer[Tweet]
     var i = 1
     for (id <- homeTimeline if i <= numberOfTweetsPerRequest) {
-      tweets :+ tweetsMap.get(id).get
+      tweets += tweetsMap.get(id).get
       i += 1
     }
     load += tweets.length
@@ -58,11 +59,11 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.m
 
   def getUserTimeline(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String): Unit = {
     val userProfile: UserProfile = userProfilesMap.get(userName).get
-    val userTimeline: List[String] = userProfile.userTimeline
-    val tweets = List[Tweet]()
+    val userTimeline: ListBuffer[String] = userProfile.userTimeline
+    val tweets = new ListBuffer[Tweet]
     var i = 1
     for (id <- userTimeline if i <= numberOfTweetsPerRequest) {
-      tweets :+ tweetsMap.get(id).get
+      tweets += tweetsMap.get(id).get
       i += 1
     }
     load += tweets.length
