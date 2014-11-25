@@ -10,6 +10,7 @@ import common.Constants
 import common.ServiceRequest
 import common.RegisterUsers
 import client.actor.ClientActorFactory
+import client.actor.PeakActor
 
 object Main {
 
@@ -20,11 +21,11 @@ object Main {
     val timeMultiplier: Double = args(1).toDouble
     val userCountMultiplier: Double = args(2).toDouble
     val tweetsCountMultiplier: Double = args(3).toDouble
-
+    
     //default values
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
     val numberOfTweetsPerDay = Array(9000, 4000, 3000, 2000, 2000, 1000, 1000, 1000, 1000, 1000)
-    var clients: Int = 1000000//2840000 //00000
+    var clients: Int = 1000//2840000 //00000
     val sampleSize: Int = 10
 
     //Scale tweets
@@ -56,11 +57,26 @@ object Main {
     val configuration = ConfigFactory.parseString(configString)
     val system = ActorSystem("Project4aClient", ConfigFactory.load(configuration))
 
-    val clientActorFactory = system.actorOf(Props(new ClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier)), "ClientActorFactory")
+    //Peak Load arguments. 
+    var peakActor: ActorRef = null
+    var peakActorName: String = ""
+    var peakActorFollowersCount: Int = 0
+    try {
+      val startTime: Int = args(4).toInt
+      val interval: Int = args(5).toInt
+      peakActorFollowersCount = args(6).toInt
+      val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/PeakActor"
+      peakActor = system.actorOf(Props(new PeakActor(startTime, interval, serverAddress, selfPath, "PeakActor")), "PeakActor")
+      peakActorName = "PeakActor"
+    } catch {
+      case ex: java.lang.ArrayIndexOutOfBoundsException => //
+    }
+    
+    val clientActorFactory = system.actorOf(Props(new ClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier, peakActor)), "ClientActorFactory")
     val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/ClientActorFactory"
     
     val server = system.actorSelection(serverAddress + "/UserRegistrationService")
-    server ! RegisterUsers(localAddress, clients, clientFactoryPath, followers, sampleSize)
+    server ! RegisterUsers(localAddress, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
 
     
     
