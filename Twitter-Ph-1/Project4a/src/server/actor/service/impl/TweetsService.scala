@@ -88,7 +88,6 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
     uuid +=: userProfile.userTimeline
     //Push to followers
     for (follower <- userProfile.followers) {
-      println(follower)
       uuid +=: userProfilesMap.get(follower).get.homeTimeline
     }
     //Register load
