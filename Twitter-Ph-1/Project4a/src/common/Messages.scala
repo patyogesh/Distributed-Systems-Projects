@@ -44,7 +44,7 @@ case class RegisterService(service: ActorRef) extends Messages
 case class UserCount(count: Int) extends Messages
 //#User Registration Messages
 case class RegisterUser(userName: String) extends Messages
-case class RegisterUsers(ip: String, clients: Int, clientFactoryPath: String) extends Messages
+case class RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize:Int) extends Messages
 case class UpdateRegisteredUserCount() extends Messages
 
 

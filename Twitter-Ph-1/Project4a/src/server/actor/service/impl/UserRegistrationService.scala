@@ -14,8 +14,10 @@ import common.UserCount
 import common.RegisterUsers
 import scala.collection.mutable.ListBuffer
 import common.Start
+import scala.collection.mutable.Map
+import scala.collection.mutable.ListBuffer
 
-class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
+class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
   var usersRegistered: Int = 0
@@ -26,10 +28,15 @@ class UserRegistrationService(loadMonitor: ActorRef, userProfilesMap: scala.coll
       val userProfile: UserProfile = new UserProfile(userName, new ListBuffer[String], new ListBuffer[String], new ListBuffer[String])
       userProfilesMap += userName -> userProfile
       usersRegistered += 1
-    case RegisterUsers(ip: String, clients: Int, clientFactoryPath: String) =>
+    case RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int) =>
       for (i <- 0 to clients - 1) {
         val userProfile: UserProfile = new UserProfile("Client" + i + "@" + ip, new ListBuffer[String], new ListBuffer[String], new ListBuffer[String])
         userProfilesMap += "Client" + i + "@" + ip -> userProfile
+        val followerCount: Int = followers(i % sampleSize)
+        val followerList: ListBuffer[String] = userProfile.followers
+        for (k <- Math.max(0, i - followerCount) to i - 1) {
+          followerList += "Client" + k + "@" + ip
+        }
       }
       usersRegistered += clients
       val factory = context.actorSelection(clientFactoryPath)

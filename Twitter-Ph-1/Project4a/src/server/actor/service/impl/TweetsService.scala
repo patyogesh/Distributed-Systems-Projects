@@ -14,8 +14,9 @@ import common.InformLoad
 import common.RegisterLoad
 import scala.collection.mutable.ListBuffer
 import common.RegisterTweetLoad
+import scala.collection.mutable.Map
 
-class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
+class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
   var load: Int = 0
@@ -87,6 +88,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mut
     uuid +=: userProfile.userTimeline
     //Push to followers
     for (follower <- userProfile.followers) {
+      println(follower)
       uuid +=: userProfilesMap.get(follower).get.homeTimeline
     }
     //Register load

@@ -24,7 +24,7 @@ object Main {
     //default values
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
     val numberOfTweetsPerDay = Array(9000, 4000, 3000, 2000, 2000, 1000, 1000, 1000, 1000, 1000)
-    var clients: Int = 284000 //00000
+    var clients: Int = 1000000//2840000 //00000
     val sampleSize: Int = 10
 
     //Scale tweets
@@ -60,7 +60,7 @@ object Main {
     val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/ClientActorFactory"
     
     val server = system.actorSelection(serverAddress + "/UserRegistrationService")
-    server ! RegisterUsers(localAddress, clients, clientFactoryPath)
+    server ! RegisterUsers(localAddress, clients, clientFactoryPath, followers, sampleSize)
 
     
     

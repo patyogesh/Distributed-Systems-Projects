@@ -19,7 +19,7 @@ import scala.collection.mutable.ListBuffer
 import common.RegisterTimelineLoad
 import scala.collection.mutable.Map
 
-class TimelineService(loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
+class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
   var load: Int = 0
