@@ -43,7 +43,7 @@ object Main {
     server ! RegisterUsers(localAddress, clients)
 
     for (i <- 0 to clients - 1) {
-      var client = system.actorOf(Props(new ClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "Client" + i + "@" + localAddress)), "Client" + i + "@" + localAddress)
+      var client = system.actorOf(Props(new ClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "Client" + i + "@" + localAddress, clients)), "Client" + i + "@" + localAddress)
     }
 
   }

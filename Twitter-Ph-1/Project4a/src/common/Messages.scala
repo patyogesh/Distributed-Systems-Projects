@@ -48,4 +48,7 @@ case class UpdateRegisteredUserCount() extends Messages
 //#Client Messages
 case class TweetToServer() extends Messages
 case class LoadHomeTimeline() extends Messages
-case class LoadUserTimeline() extends Messages
+case class LoadHomeTimelineReq() extends Messages
+case class LoadHomeTimelineResp() extends Messages
+case class LoadUserTimelineReq() extends Messages
+case class LoadUserTimelineResp() extends Messages
