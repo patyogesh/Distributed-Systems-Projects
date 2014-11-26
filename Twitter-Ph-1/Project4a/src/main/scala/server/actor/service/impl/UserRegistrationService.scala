@@ -20,7 +20,6 @@ import akka.routing.ActorRefRoutee
 import akka.routing.RoundRobinRoutingLogic
 import akka.routing.Router
 import main.scala.common.CreateUserProfiles
-import main.scala.common.UserRegistrationComplete
 import main.scala.common.TaskComplete
 
 class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
@@ -67,11 +66,12 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       val factory = context.actorSelection(clientFactoryPath)
       factory ! Start*/
 
+      
       val taskCount = userProfileCreatorRouter.routees.length
       val taskSize: Int = Math.ceil(clients / taskCount).toInt
       jobMap += jobID -> new Job(jobID, taskCount, taskSize, clientFactoryPath)
       for (i <- 0 to taskCount - 1) {
-        userProfileCreatorRouter.route(CreateUserProfiles(jobID, i * taskSize, Math.min(((i + 1) * taskSize) - 1, clients - 1), ip, userProfilesMap, followers, sampleSize), sender)
+        userProfileCreatorRouter.route(CreateUserProfiles(jobID, i * taskSize, Math.min(((i + 1) * taskSize) - 1, clients - 1), ip, userProfilesMap, followers, sampleSize, self.path.toString()), sender)
       }
       jobID += 1
 
@@ -92,8 +92,6 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
         val factory = context.actorSelection(job.clientFactoryPath)
         factory ! Start
       }
-    case UserRegistrationComplete =>
-      println("")
     case UpdateRegisteredUserCount =>
       loadMonitor ! UserCount(usersRegistered)
       usersRegistered = 0
