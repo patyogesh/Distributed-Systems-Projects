@@ -26,7 +26,7 @@ object Main {
     //default values
     val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
     val numberOfTweetsPerDay = Array(900, 400, 300, 200, 200, 100, 100, 100, 100, 100)
-    var clients: Int = 500//2840000
+    var clients: Int = 50 //2840000
     val sampleSize: Int = 10
 
     //Scale tweets
