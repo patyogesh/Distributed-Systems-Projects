@@ -21,6 +21,7 @@ import akka.routing.RoundRobinRoutingLogic
 import akka.routing.Router
 import main.scala.common.CreateUserProfiles
 import main.scala.common.TaskComplete
+import akka.actor.Terminated
 
 class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
@@ -29,7 +30,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
   var jobID: Int = 0
   var jobMap = Map[Int, Job]()
   val useRegistered = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, UpdateRegisteredUserCount)
-  val userProfileCreatorRouter = {
+  var userProfileCreatorRouter = {
     val routees = Vector.fill(count) {
       val r = context.actorOf(Props(new UserAccountCreatorActor()))
       context watch r
@@ -66,7 +67,6 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       val factory = context.actorSelection(clientFactoryPath)
       factory ! Start*/
 
-      
       val taskCount = userProfileCreatorRouter.routees.length
       val taskSize: Int = Math.ceil(clients / taskCount).toInt
       jobMap += jobID -> new Job(jobID, taskCount, taskSize, clientFactoryPath)
@@ -95,6 +95,11 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
     case UpdateRegisteredUserCount =>
       loadMonitor ! UserCount(usersRegistered)
       usersRegistered = 0
+    case Terminated(a) =>
+      userProfileCreatorRouter = userProfileCreatorRouter.removeRoutee(a)
+      val r = context.actorOf(Props(new UserAccountCreatorActor()))
+      context watch r
+      userProfileCreatorRouter = userProfileCreatorRouter.addRoutee(r)
     case _ => println("Unknown message received in User Registration service.")
   }
 }
