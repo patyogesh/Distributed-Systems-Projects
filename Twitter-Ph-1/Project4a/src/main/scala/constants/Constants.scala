@@ -1,5 +1,0 @@
-package constants
-
-class Constants {
-
-}
