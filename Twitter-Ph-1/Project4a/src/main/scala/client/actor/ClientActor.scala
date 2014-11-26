@@ -35,20 +35,17 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val homeTimeline = context.system.scheduler.schedule((offset / 4) * 1000 milliseconds, homeTimelineTimeout * 1000 milliseconds, self, LoadHomeTimelineReq)
       val userTimelineTimeout = ((24 * 3600) / (1 * timeMultiplier))
       val userTimeline = context.system.scheduler.schedule((offset / 1) * 1000 milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
-      println("Timeout for Home timeline : " + homeTimelineTimeout + " . Timeout for user timeline : " + userTimelineTimeout)
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
     case LoadHomeTimelineReq =>
-      println("HomeTimeLine")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
     case LoadHomeTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
-      println("UserTimeLine")
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       server ! new Request(selfPath + name, "GetUserTimeline", name, "", "")
