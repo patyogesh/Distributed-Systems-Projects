@@ -38,7 +38,7 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
+      server ! new Request(selfPath + name, "PostUpdate", name, "", getRandomText)
     case LoadHomeTimelineReq =>
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
@@ -53,5 +53,16 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
     //Trash Received tweets from server
     case _ =>
       println("Unknown Message received at client")
+  }
+
+  //Generate random String for tweet text
+  def getRandomText(): String = {
+    val random = new scala.util.Random
+    val length: Int = random.nextInt(120) + 20 //min 20 chars, max 140 chars
+    val sb = new StringBuilder
+    for (i <- 1 to length) {
+      sb.append(random.nextPrintableChar)
+    }
+    sb.toString
   }
 }

@@ -9,7 +9,6 @@ import main.scala.common.ServiceRequest
 import main.scala.common.UserProfile
 import main.scala.common.Tweet
 import main.scala.common.Request
-import main.scala.common.RegisterLoad
 import main.scala.common.InformLoad
 import main.scala.common.ReturnHomeTimeline
 import main.scala.common.ReturnUserTimeline

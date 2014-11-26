@@ -11,7 +11,6 @@ import main.scala.common.UserProfile
 import java.lang.Class
 import main.scala.common.Request
 import main.scala.common.InformLoad
-import main.scala.common.RegisterLoad
 import scala.collection.mutable.ListBuffer
 import main.scala.common.RegisterTweetLoad
 import scala.collection.mutable.Map
