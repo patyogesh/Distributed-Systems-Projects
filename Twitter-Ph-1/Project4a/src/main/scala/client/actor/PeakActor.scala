@@ -1,11 +1,11 @@
 package client.actor
 
 import akka.actor.Actor
-import common.TweetToServer
+import main.scala.common.TweetToServer
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import common.Request
-import common.Start
+import main.scala.common.Request
+import main.scala.common.Start
 
 class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: String, name: String) extends Actor {
 

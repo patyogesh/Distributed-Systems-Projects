@@ -1,15 +1,17 @@
-package client.main
+package main.scala.client.main
 
 import akka.actor.ActorSystem
 import akka.actor.Props
-import client.actor.ClientActor
+import main.scala.client.actor.ClientActor
 import akka.actor.ActorRef
 import com.typesafe.config.ConfigFactory
 import common.Constants
-import common.ServiceRequest
-import client.actor.ClientActorFactory
+import main.scala.common.ServiceRequest
+import main.scala.client.actor.ClientActorFactory
 import client.actor.PeakActor
-import common.RegisterUsers
+import main.scala.common.RegisterUsers
+import main.scala.client.actor.ClientActorFactory
+import main.scala.common.RegisterUsers
 
 object Main {
 

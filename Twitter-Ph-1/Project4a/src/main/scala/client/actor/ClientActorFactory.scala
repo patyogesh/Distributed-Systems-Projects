@@ -1,8 +1,8 @@
-package client.actor
+package main.scala.client.actor
 
 import akka.actor.Actor
 import akka.actor.Props
-import common.Start
+import main.scala.common.Start
 import scala.collection.mutable.ListBuffer
 import akka.actor.ActorRef
 
@@ -14,6 +14,7 @@ class ClientActorFactory(clients: Int, serverAddress: String, followers: Array[I
   }
   def receive = {
     case Start =>
+      println("Registration of clinets on server successful. Starting Load on server.")
       if (peakActor != null)
         peakActor ! Start
       clientActors.foreach(ref => ref ! Start)

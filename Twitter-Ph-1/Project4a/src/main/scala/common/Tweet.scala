@@ -1,4 +1,4 @@
-package common
+package main.scala.common
 
 class Tweet(uid: String, tweettext: String) {
 

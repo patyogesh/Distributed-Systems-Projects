@@ -5,15 +5,15 @@ import akka.actor.actorRef2Scala
 import akka.actor.ActorRef
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import common.ServiceRequest
-import common.Tweet
-import common.UserProfile
+import main.scala.common.ServiceRequest
+import main.scala.common.Tweet
+import main.scala.common.UserProfile
 import java.lang.Class
-import common.Request
-import common.InformLoad
-import common.RegisterLoad
+import main.scala.common.Request
+import main.scala.common.InformLoad
+import main.scala.common.RegisterLoad
 import scala.collection.mutable.ListBuffer
-import common.RegisterTweetLoad
+import main.scala.common.RegisterTweetLoad
 import scala.collection.mutable.Map
 
 class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {

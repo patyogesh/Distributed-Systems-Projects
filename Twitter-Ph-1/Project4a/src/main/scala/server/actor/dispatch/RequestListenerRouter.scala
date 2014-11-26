@@ -1,4 +1,4 @@
-package server.actor.dispatch
+package main.scala.server.actor.dispatch
 
 import akka.actor.Actor
 import akka.actor.Props
@@ -9,7 +9,7 @@ import akka.actor.Terminated
 import akka.actor.ActorRef
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import common.Print
+import main.scala.common.Print
 
 class RequestListenerRouter(serviceRouterMap: Map[String, ActorRef]) extends Actor {
 

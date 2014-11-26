@@ -1,22 +1,22 @@
-package client.actor
+package main.scala.client.actor
 
 import akka.actor.Actor
 import akka.actor.ActorSelection
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import common.ServiceRequest
+import main.scala.common.ServiceRequest
 import common.Constants
-import common.TweetToServer
-import common.Request
-import common.LoadHomeTimeline
-import common.LoadHomeTimelineReq
-import common.LoadHomeTimelineResp
-import common.LoadUserTimelineResp
-import common.LoadUserTimelineReq
-import common.Tweet
+import main.scala.common.TweetToServer
+import main.scala.common.Request
+import main.scala.common.LoadHomeTimeline
+import main.scala.common.LoadHomeTimelineReq
+import main.scala.common.LoadHomeTimelineResp
+import main.scala.common.LoadUserTimelineResp
+import main.scala.common.LoadUserTimelineReq
+import main.scala.common.Tweet
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
-import common.Start
+import main.scala.common.Start
 
 class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Double, name: String, totalClients: Int, timeMultiplier: Double) extends Actor {
 

@@ -1,4 +1,4 @@
-package common
+package main.scala.common
 
 import akka.actor.ActorRef
 import scala.collection.mutable.Map
@@ -41,10 +41,14 @@ case class RegisterTimelineLoad(load: Int) extends Messages
 case class PrintLoad() extends Messages
 case class RegisterService(service: ActorRef) extends Messages
 case class UserCount(count: Int) extends Messages
+
 //#User Registration Messages
 case class RegisterUser(userName: String) extends Messages
 case class RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int) extends Messages
 case class UpdateRegisteredUserCount() extends Messages
+case class UserRegistrationComplete() extends Messages
+case class CreateUserProfiles(jobId: Int, start: Int, end: Int, ip: String, userProfilesMap: Map[String, UserProfile], followers: Array[Int], sampleSize: Int) extends Messages
+case class TaskComplete(jobID: Int) extends Messages
 
 //#Client Messages
 case class TweetToServer() extends Messages

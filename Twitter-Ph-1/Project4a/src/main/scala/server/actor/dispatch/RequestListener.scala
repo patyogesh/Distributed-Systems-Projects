@@ -1,11 +1,11 @@
-package server.actor.dispatch
+package main.scala.server.actor.dispatch
 
 import akka.actor.Actor
 import akka.actor.ActorRef
 import akka.actor.Props
 import akka.routing.SmallestMailboxRouter
-import common.Timeline
-import common.Tweets
+import main.scala.common.Timeline
+import main.scala.common.Tweets
 
 class RequestListener(serviceRouterMap: Map[String, ActorRef]) extends Actor {
 

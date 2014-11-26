@@ -4,13 +4,13 @@ import akka.actor.Actor
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
 import akka.actor.ActorRef
-import common.PrintLoad
-import common.RegisterLoad
-import common.UserCount
-import common.RegisterTweetLoad
-import common.RegisterTimelineLoad
+import main.scala.common.PrintLoad
+import main.scala.common.RegisterLoad
+import main.scala.common.UserCount
+import main.scala.common.RegisterTweetLoad
+import main.scala.common.RegisterTimelineLoad
 
-class LoadMonitor() extends Actor {
+class LoadMonitor(updateTimeout: Int) extends Actor {
   import context.dispatcher
 
   var serverLoad: Int = 0
@@ -18,7 +18,7 @@ class LoadMonitor() extends Actor {
   var userCount: Int = 0
   var serverTweetLoad: Int = 0
   var serverTimelineLoad: Int = 0
-  val printLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, PrintLoad)
+  val printLoad = context.system.scheduler.schedule(0 milliseconds, updateTimeout milliseconds, self, PrintLoad)
 
   def receive = {
     case RegisterLoad(load) =>

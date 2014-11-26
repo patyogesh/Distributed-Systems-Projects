@@ -1,4 +1,4 @@
-package common
+package main.scala.common
 
 import scala.collection.mutable.ListBuffer
 

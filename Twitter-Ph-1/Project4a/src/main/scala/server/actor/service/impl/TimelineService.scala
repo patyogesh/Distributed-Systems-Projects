@@ -5,18 +5,18 @@ import akka.actor.actorRef2Scala
 import akka.actor.ActorRef
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import common.ServiceRequest
-import common.UserProfile
-import common.Tweet
-import common.Request
-import common.RegisterLoad
-import common.InformLoad
-import common.ReturnHomeTimeline
-import common.ReturnUserTimeline
-import common.LoadHomeTimelineResp
-import common.LoadUserTimelineResp
+import main.scala.common.ServiceRequest
+import main.scala.common.UserProfile
+import main.scala.common.Tweet
+import main.scala.common.Request
+import main.scala.common.RegisterLoad
+import main.scala.common.InformLoad
+import main.scala.common.ReturnHomeTimeline
+import main.scala.common.ReturnUserTimeline
+import main.scala.common.LoadHomeTimelineResp
+import main.scala.common.LoadUserTimelineResp
 import scala.collection.mutable.ListBuffer
-import common.RegisterTimelineLoad
+import main.scala.common.RegisterTimelineLoad
 import scala.collection.mutable.Map
 
 class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
