@@ -60,16 +60,20 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserPr
   }
 
   def getUserTimeline(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String): Unit = {
-    val userProfile: UserProfile = userProfilesMap.get(userName).get
-    val userTimeline: ListBuffer[String] = userProfile.userTimeline
-    val tweets = Map[String, String]()
-    var i = 1
-    for (id <- userTimeline if i <= numberOfTweetsPerRequest) {
-      tweets += id -> tweetsMap.get(id).get.text
-      i += 1
+    try {
+      val userProfile: UserProfile = userProfilesMap.get(userName).get
+      val userTimeline: ListBuffer[String] = userProfile.userTimeline
+      val tweets = Map[String, String]()
+      var i = 1
+      for (id <- userTimeline if i <= numberOfTweetsPerRequest) {
+        tweets += id -> tweetsMap.get(id).get.text
+        i += 1
+      }
+      load += tweets.size
+      val client = context.actorSelection(requestActorPath)
+      client ! new LoadUserTimelineResp(tweets)
+    } catch {
+      case e: java.util.NoSuchElementException => //Ignore for Unregistered User println("Username : " + userName)
     }
-    load += tweets.size
-    val client = context.actorSelection(requestActorPath)
-    client ! new LoadUserTimelineResp(tweets)
   }
 }
