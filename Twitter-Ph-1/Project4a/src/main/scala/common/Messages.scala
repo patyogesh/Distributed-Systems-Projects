@@ -35,7 +35,6 @@ case class Print() extends Messages
 //#Load Monitor Messages
 case class MeasureLoad() extends Messages
 case class InformLoad() extends Messages
-case class RegisterLoad(load: Int) extends Messages
 case class RegisterTweetLoad(load: Int) extends Messages
 case class RegisterTimelineLoad(load: Int) extends Messages
 case class PrintLoad() extends Messages
