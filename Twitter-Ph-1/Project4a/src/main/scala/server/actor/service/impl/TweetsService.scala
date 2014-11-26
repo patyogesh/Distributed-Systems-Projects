@@ -96,7 +96,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
       load += userProfile.followers.length + 2
 
     } catch {
-      case e: java.util.NoSuchElementException => println("Username : " + userName)
+      case e: java.util.NoSuchElementException => //Ignore Unregistered User println("Username : " + userName)
     }
   }
 
