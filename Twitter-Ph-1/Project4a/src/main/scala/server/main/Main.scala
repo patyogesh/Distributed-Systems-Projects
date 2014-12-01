@@ -10,11 +10,13 @@ import common.Constants
 import main.scala.common.UserProfile
 import main.scala.common.Tweet
 import main.scala.server.actor.service.router.UserRegistrationRouter
+import main.scala.server.actor.service.router.TimelineServiceRouter
+import main.scala.server.actor.service.router.TweetsServiceRouter
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection._
 import scala.collection.convert.decorateAsScala._
-import main.scala.server.actor.service.router.TimelineServiceRouter
-import main.scala.server.actor.service.router.TweetsServiceRouter
+
+
 
 //#This class is the main class to launch the tweeter server for this project. 
 object Main {

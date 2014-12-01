@@ -1,4 +1,4 @@
-package server.actor.service.router
+package main.scala.server.actor.service.router
 
 import akka.actor.Actor
 import akka.actor.Props
