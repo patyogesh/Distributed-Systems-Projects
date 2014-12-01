@@ -18,6 +18,7 @@ import scala.collection.mutable.ListBuffer
 import main.scala.common.RegisterTimelineLoad
 import scala.collection.mutable.Map
 
+//#This serves any timeline service request coming from any user.
 class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
@@ -37,7 +38,7 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserPr
     case InformLoad =>
       loadMonitor ! RegisterTimelineLoad(load)
       load = 0
-    case _ => println("Unknowk message received in Timeline service.");
+    case _ => println("Unknown end point called form Tweet Service");
   }
 
   def getMentionsTimeline(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {

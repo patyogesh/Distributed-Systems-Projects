@@ -7,13 +7,13 @@ import java.util.concurrent.TimeUnit
 import main.scala.common.Request
 import main.scala.common.Start
 
+//#This actor simulates a sudden peak load on server by having a large number of followers and tweeting.
 class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: String, name: String) extends Actor {
 
   import context.dispatcher
 
   def receive = {
     case Start =>
-      
       val spike = context.system.scheduler.schedule((startTime * 1000) milliseconds, (interval * 1000) milliseconds, self, TweetToServer)
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"

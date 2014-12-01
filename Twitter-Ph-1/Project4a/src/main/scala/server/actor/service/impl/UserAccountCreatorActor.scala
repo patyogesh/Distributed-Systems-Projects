@@ -6,6 +6,7 @@ import main.scala.common.UserProfile
 import main.scala.common.CreateUserProfiles
 import main.scala.common.TaskComplete
 
+//#Helps registering users on server faster by dividing task among actors
 class UserAccountCreatorActor extends Actor {
 
   def receive = {

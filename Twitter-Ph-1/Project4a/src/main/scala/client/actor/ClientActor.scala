@@ -18,6 +18,7 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
 import main.scala.common.Start
 
+//#This class simulates normal user of tweeter through an actor. 
 class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Double, name: String, totalClients: Int, timeMultiplier: Double) extends Actor {
 
   val constants = new Constants()

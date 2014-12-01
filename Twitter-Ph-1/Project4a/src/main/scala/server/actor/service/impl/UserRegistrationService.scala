@@ -23,6 +23,7 @@ import main.scala.common.CreateUserProfiles
 import main.scala.common.TaskComplete
 import akka.actor.Terminated
 
+//#This service registers users corresponding to a request from a client.
 class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 

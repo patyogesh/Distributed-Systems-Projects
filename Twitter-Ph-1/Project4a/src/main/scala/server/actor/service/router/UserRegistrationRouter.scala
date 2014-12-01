@@ -14,6 +14,7 @@ import main.scala.common.ServiceRequest
 import main.scala.common.RegisterUser
 import main.scala.common.RegisterUsers
 
+//#Accepts User registration from multiple clients and delegates request to multiple service actors to register the users to server.
 class UserRegistrationRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
 
   var router = {

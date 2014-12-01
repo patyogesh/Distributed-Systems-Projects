@@ -4,6 +4,7 @@ import akka.actor.ActorRef
 import scala.collection.mutable.Map
 import scala.collection.mutable.ListBuffer
 
+//#All messsages sent in the project
 sealed trait Messages
 
 case class Request(requestActorPath: String, endPoint: String, val userName: String, val tweetuuid: String, tweetText: String) extends Messages

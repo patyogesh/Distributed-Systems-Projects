@@ -6,6 +6,7 @@ import main.scala.common.Start
 import scala.collection.mutable.ListBuffer
 import akka.actor.ActorRef
 
+//#This class creates client actors to simulate users on client side.
 class ClientActorFactory(clients: Int, serverAddress: String, followers: Array[Int], sampleSize: Int, numberOfTweetsPerDay: Array[Int], offset: Double, localAddress: String, timeMultiplier: Double, peakActor: ActorRef) extends Actor {
 
   val clientActors = ListBuffer[ActorRef]()

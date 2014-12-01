@@ -13,6 +13,7 @@ import main.scala.common.RegisterUsers
 import main.scala.client.actor.ClientActorFactory
 import main.scala.common.RegisterUsers
 
+//#Client Main class to put load on Tweeter server for the project
 object Main {
 
   def main(args: Array[String]) {
@@ -58,7 +59,7 @@ object Main {
     val configuration = ConfigFactory.parseString(configString)
     val system = ActorSystem("Project4aClient", ConfigFactory.load(configuration))
 
-    //Peak Load arguments. 
+    //Peak Load arguments. Optional.
     var peakActor: ActorRef = null
     var peakActorName: String = ""
     var peakActorFollowersCount: Int = 0
@@ -70,9 +71,10 @@ object Main {
       peakActor = system.actorOf(Props(new PeakActor(startTime, interval, serverAddress, selfPath, "PeakActor@" + localAddress)), "PeakActor")
       peakActorName = "PeakActor"
     } catch {
-      case ex: java.lang.ArrayIndexOutOfBoundsException => //
+      case ex: java.lang.ArrayIndexOutOfBoundsException => println("Invalid argument List")
     }
 
+    //#This class instantiates the user actors on client side and starts them when registration on server side is complete.
     val clientActorFactory = system.actorOf(Props(new ClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier, peakActor)), "ClientActorFactory")
     val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/ClientActorFactory"
 

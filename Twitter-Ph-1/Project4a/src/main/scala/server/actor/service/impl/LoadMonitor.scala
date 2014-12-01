@@ -9,6 +9,7 @@ import main.scala.common.UserCount
 import main.scala.common.RegisterTweetLoad
 import main.scala.common.RegisterTimelineLoad
 
+//#This is the load monitor of tweeter server and measures all load on server.
 class LoadMonitor(updateTimeout: Int) extends Actor {
   import context.dispatcher
 

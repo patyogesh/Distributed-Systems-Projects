@@ -13,6 +13,8 @@ import main.scala.common.UserProfile
 import main.scala.common.Tweet
 import main.scala.common.Request
 
+//#Receives Timeline request from users and routes the request to a service actor instance for processing request.
+//#This also acts as the interface to the users on the server side for sending request to for processing.
 class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: scala.collection.mutable.Map[String, UserProfile], tweetsMap: scala.collection.mutable.Map[String, Tweet]) extends Actor {
 
   var load: Int = 0

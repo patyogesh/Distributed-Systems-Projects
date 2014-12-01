@@ -15,6 +15,7 @@ import scala.collection.mutable.ListBuffer
 import main.scala.common.RegisterTweetLoad
 import scala.collection.mutable.Map
 
+//#This services any tweet request coming form user.
 class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
   import context.dispatcher
 
@@ -24,40 +25,40 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
   def receive = {
     case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
       if (endPoint equalsIgnoreCase ("GetRetweets"))
-        getRetweets(endPoint, userName, tweetuuid, tweetText)
+        getRetweets(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("GetShow"))
-        getShow(endPoint, userName, tweetuuid, tweetText)
+        getShow(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("GetOembed"))
-        getOembed(endPoint, userName, tweetuuid, tweetText)
+        getOembed(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("PostRetweet"))
-        postRetweet(endPoint, userName, tweetuuid, tweetText)
+        postRetweet(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("PostUpdate"))
-        postUpdate(endPoint, userName, tweetuuid, tweetText)
+        postUpdate(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("PostUpdateWithMedia"))
-        postUpdateWithMedia(endPoint, userName, tweetuuid, tweetText)
+        postUpdateWithMedia(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("PostDestroy"))
-        postDestroy(endPoint, userName, tweetuuid, tweetText)
+        postDestroy(userName, tweetuuid, tweetText)
       else
-        println("Unknown end point")
+        println("Unknown end point called form Tweet Service")
     case InformLoad =>
       loadMonitor ! RegisterTweetLoad(load)
       load = 0
     case _ => println("Unknown message received in Tweets service.")
   }
 
-  def getRetweets(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def getRetweets(userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def getShow(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def getShow(userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def getOembed(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def getOembed(userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def postRetweet(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def postRetweet(userName: String, tweetuuid: String, tweetText: String) = {
     val uuid: String = tweetuuid
     val userProfile: UserProfile = userProfilesMap.get(userName).get
     //Push to user profile
@@ -70,9 +71,8 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
     load += userProfile.followers.length + 2
   }
 
-  def postUpdate(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def postUpdate(userName: String, tweetuuid: String, tweetText: String) = {
     try {
-
       //Push to tweet map
       var done = false
       var uuid: String = ""
@@ -80,7 +80,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
         uuid = java.util.UUID.randomUUID().toString()
 
         if (tweetsMap.get(uuid) == None) {
-          tweetsMap += uuid -> new Tweet(uuid, tweetText)
+          tweetsMap += uuid -> new Tweet(uuid, tweetText, userName)
           done = true
         }
       }
@@ -93,17 +93,16 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
       }
       //Register load
       load += userProfile.followers.length + 2
-
     } catch {
       case e: java.util.NoSuchElementException => //Ignore for Unregistered User println("Username : " + userName)
     }
   }
 
-  def postUpdateWithMedia(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def postUpdateWithMedia(userName: String, tweetuuid: String, tweetText: String) = {
 
   }
 
-  def postDestroy(endPoint: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def postDestroy(userName: String, tweetuuid: String, tweetText: String) = {
     tweetsMap.remove(tweetuuid)
   }
 }
