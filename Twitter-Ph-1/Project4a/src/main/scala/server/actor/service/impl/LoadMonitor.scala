@@ -17,7 +17,7 @@ class LoadMonitor(updateTimeout: Int) extends Actor {
   var userCount: Int = 0
   var serverTweetLoad: Int = 0
   var serverTimelineLoad: Int = 0
-  val printLoad = context.system.scheduler.schedule(1000 milliseconds, updateTimeout milliseconds, self, PrintLoad)
+  val printLoad = context.system.scheduler.schedule(0 milliseconds, updateTimeout milliseconds, self, PrintLoad)
 
   def receive = {
     case RegisterTweetLoad(load) =>
