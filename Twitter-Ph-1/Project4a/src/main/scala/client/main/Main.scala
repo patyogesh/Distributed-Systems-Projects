@@ -71,7 +71,7 @@ object Main {
       peakActor = system.actorOf(Props(new PeakActor(startTime, interval, serverAddress, selfPath, "PeakActor@" + localAddress)), "PeakActor")
       peakActorName = "PeakActor"
     } catch {
-      case ex: java.lang.ArrayIndexOutOfBoundsException => println("Invalid argument List")
+      case ex: java.lang.ArrayIndexOutOfBoundsException => //Optional arguments for peak load. 
     }
 
     //#This class instantiates the user actors on client side and starts them when registration on server side is complete.
