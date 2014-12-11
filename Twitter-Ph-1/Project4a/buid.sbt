@@ -1,4 +1,4 @@
-name := "Remoting"
+name := "Project4a"
 
 version := "1.0"
 
