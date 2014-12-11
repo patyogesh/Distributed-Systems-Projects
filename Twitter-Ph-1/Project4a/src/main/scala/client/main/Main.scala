@@ -39,7 +39,7 @@ object Main {
 
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    val serverAddress: String = "akka.tcp://Project4aServer@" + hostAddress + ":" + constants.SERVER_PORT + "/user"
+    val serverAddress: String = "akka.tcp://AkkaServer@" + hostAddress + ":" + constants.SERVER_PORT + "/user"
 
     //Scale time
     val offset = (24 * 3600) / (clients * timeMultiplier)
@@ -56,6 +56,7 @@ object Main {
     }
  }
 }"""
+      
     val configuration = ConfigFactory.parseString(configString)
     val system = ActorSystem("Project4aClient", ConfigFactory.load(configuration))
 

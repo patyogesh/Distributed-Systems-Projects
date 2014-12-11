@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import main.scala.common.ServiceRequest
 import main.scala.common.UserProfile
 import main.scala.common.Tweet
-import main.scala.common.Request
+import main.scala.common.AkkaRequest
 import main.scala.common.InformLoad
 import main.scala.common.ReturnHomeTimeline
 import main.scala.common.ReturnUserTimeline
@@ -28,7 +28,7 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserPr
   val numberOfTweetsPerRequest = 20
 
   def receive = {
-    case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+    case AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
       if (endPoint equalsIgnoreCase ("GetMentionsTimeline"))
         getMentionsTimeline(requestActorPath, endPoint, userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("GetHomeTimeline"))

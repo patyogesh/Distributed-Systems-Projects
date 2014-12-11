@@ -7,7 +7,11 @@ import scala.collection.mutable.ListBuffer
 //#All messsages sent in the project
 sealed trait Messages
 
-case class Request(requestActorPath: String, endPoint: String, val userName: String, val tweetuuid: String, tweetText: String) extends Messages
+
+//#Request message to Akka server
+case class AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) extends Messages
+case class AkkaResponse(status: Boolean, akkaRequest: AkkaRequest) extends Messages
+
 //#RequestListener messages
 case class Timeline() extends Messages
 case class Tweets() extends Messages
@@ -56,4 +60,5 @@ case class LoadHomeTimelineReq() extends Messages
 case class LoadHomeTimelineResp(tweets: Map[String, String]) extends Messages
 case class LoadUserTimelineReq() extends Messages
 case class LoadUserTimelineResp(tweets: Map[String, String]) extends Messages
+
 case class Start() extends Messages

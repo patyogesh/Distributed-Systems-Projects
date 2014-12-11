@@ -9,7 +9,7 @@ import main.scala.common.ServiceRequest
 import main.scala.common.Tweet
 import main.scala.common.UserProfile
 import java.lang.Class
-import main.scala.common.Request
+import main.scala.common.AkkaRequest
 import main.scala.common.InformLoad
 import scala.collection.mutable.ListBuffer
 import main.scala.common.RegisterTweetLoad
@@ -23,7 +23,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
   val updateLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, InformLoad)
 
   def receive = {
-    case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+    case AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
       if (endPoint equalsIgnoreCase ("GetRetweets"))
         getRetweets(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("GetShow"))

@@ -1,4 +1,4 @@
-package test
+package testspraycan
 
 import scala.concurrent.duration._
 import akka.pattern.ask

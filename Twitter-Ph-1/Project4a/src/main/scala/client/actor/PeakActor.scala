@@ -4,7 +4,7 @@ import akka.actor.Actor
 import main.scala.common.TweetToServer
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
-import main.scala.common.Request
+import main.scala.common.AkkaRequest
 import main.scala.common.Start
 
 //#This actor simulates a sudden peak load on server by having a large number of followers and tweeting.
@@ -19,7 +19,7 @@ class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: 
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
       println("creating spike load.")
-      server ! new Request(selfPath + name, "PostUpdate", name, "", "blah!")
+      server ! new AkkaRequest(selfPath + name, "PostUpdate", name, "", "blah!")
     case _ =>
       println("Unknown message received in Peak actor")
   }

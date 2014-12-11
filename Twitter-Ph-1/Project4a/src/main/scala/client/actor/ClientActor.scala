@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 import main.scala.common.ServiceRequest
 import common.Constants
 import main.scala.common.TweetToServer
-import main.scala.common.Request
+import main.scala.common.AkkaRequest
 import main.scala.common.LoadHomeTimeline
 import main.scala.common.LoadHomeTimelineReq
 import main.scala.common.LoadHomeTimelineResp
@@ -39,17 +39,17 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new Request(selfPath + name, "PostUpdate", name, "", getRandomText)
+      server ! new AkkaRequest(selfPath + name, "PostUpdate", name, "", getRandomText)
     case LoadHomeTimelineReq =>
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new Request(selfPath + name, "GetHomeTimeline", name, "", "")
+      server ! new AkkaRequest(selfPath + name, "GetHomeTimeline", name, "", "")
     case LoadHomeTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new Request(selfPath + name, "GetUserTimeline", name, "", "")
+      server ! new AkkaRequest(selfPath + name, "GetUserTimeline", name, "", "")
     case LoadUserTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server
     case _ =>

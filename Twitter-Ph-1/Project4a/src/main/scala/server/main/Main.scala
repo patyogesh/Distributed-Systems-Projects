@@ -43,7 +43,7 @@ object Main {
     val cores: Int = Runtime.getRuntime().availableProcessors();
     val coresScaleUp: Int = 2 //Safe value for any core to be completely utilised
 
-    val system = ActorSystem("Project4aServer", ConfigFactory.load(configuration))
+    val system = ActorSystem("AkkaServer", ConfigFactory.load(configuration))
 
     //#These maps store user profiles and tweets made to the tweeter server. They are concurrent maps and hence guarantee concurrent read and write operations to tweets and user profiles.
     val userProfilesMap: concurrent.Map[String, UserProfile] = new ConcurrentHashMap().asScala

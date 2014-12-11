@@ -11,7 +11,7 @@ import akka.actor.ActorRef
 import main.scala.common.ServiceRequest
 import main.scala.common.UserProfile
 import main.scala.common.Tweet
-import main.scala.common.Request
+import main.scala.common.AkkaRequest
 
 //#Receives Timeline request from users and routes the request to a service actor instance for processing request.
 //#This also acts as the interface to the users on the server side for sending request to for processing.
@@ -27,8 +27,8 @@ class TimelineServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: 
     Router(RoundRobinRoutingLogic(), routees)
   }
   def receive = {
-    case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
-      router.route(Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String), sender)
+    case AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+      router.route(AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new TimelineService(loadMonitor, userProfilesMap, tweetsMap)))

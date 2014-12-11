@@ -12,7 +12,7 @@ import akka.actor.ActorRef
 import main.scala.common.ServiceRequest
 import main.scala.common.UserProfile
 import main.scala.common.Tweet
-import main.scala.common.Request
+import main.scala.common.AkkaRequest
 
 //#Receives Tweet request from users and routes the request to a service actor instance for processing request.
 //#This also acts as the interface to the users on the server side for sending request to for processing. 
@@ -29,8 +29,8 @@ class TweetsServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: sc
   }
 
   def receive = {
-    case Request(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
-      router.route(Request(requestActorPath, endPoint, userName, tweetuuid, tweetText), sender)
+    case AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+      router.route(AkkaRequest(requestActorPath, endPoint, userName, tweetuuid, tweetText), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new TweetsService(loadMonitor, userProfilesMap, tweetsMap)))
