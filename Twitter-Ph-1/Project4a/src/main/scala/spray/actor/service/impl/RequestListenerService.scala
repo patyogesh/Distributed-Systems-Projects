@@ -12,11 +12,12 @@ import spray.http.HttpHeaders._
 import spray.http.ContentTypes._
 import akka.actor.ActorRef
 import scala.collection.mutable.Map
+import main.scala.common.AkkaRequest
 
-class RequestListenerService(name: String, akkaServerIP: String, localAddress: String, serverPort: Int, requestMap: Map[String, ActorRef]) extends Actor {
+class RequestListenerService(name: String, akkaServerIP: String, akkaPort: Int, localAddress: String, sprayPort: Int, requestMap: Map[String, ActorRef]) extends Actor {
 
-  val selfPath = "akka.tcp://SprayServer@" + localAddress + ":" + serverPort + "/user/" + name
-  val akkaServerPath = "akka.tcp://AkkaServer@" + akkaServerIP + ":" + serverPort + "/user/"
+  val selfPath = "akka.tcp://SprayServer@" + localAddress + ":" + sprayPort + "/user/" + name
+  val akkaServerPath = "akka.tcp://AkkaServer@" + akkaServerIP + ":" + akkaPort + "/user/"
 
   def receive = {
     case _: Http.Connected => sender ! Http.Register(self)
@@ -53,16 +54,16 @@ class RequestListenerService(name: String, akkaServerIP: String, localAddress: S
           done = true
         }
       }
-      val akkaRequest = new AkkaRequest(uuid, selfPath, endPoint, userName, "", tweetText)
       println(akkaServerPath + "TweetsServiceRouter")
       val akkaServer = context.actorSelection(akkaServerPath + "TweetsServiceRouter")
-      akkaServer ! akkaRequest
+      akkaServer ! AkkaRequest(uuid, selfPath, endPoint, userName, "", tweetText)
+      println("Sent to akka at : " + akkaServerPath + "TweetsServiceRouter")
       //self ! PostUpdateResponse(uuid)
       
       
     //POST Update Response from akka server
     case PostUpdateResponse(uuid: String) =>
-      println("received")
+      println("received fromm akka")
       val ref = requestMap.remove(uuid).get
       ref ! HttpResponse(entity = "REQUEST COMPLETE")
 

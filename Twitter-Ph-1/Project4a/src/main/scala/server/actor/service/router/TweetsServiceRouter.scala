@@ -30,6 +30,7 @@ class TweetsServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: sc
 
   def receive = {
     case AkkaRequest(uuid: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+      println("Request at router")
       router.route(AkkaRequest(uuid: String, requestActorPath, endPoint, userName, tweetuuid, tweetText), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
