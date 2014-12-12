@@ -16,7 +16,7 @@ import scala.collection.mutable.Map
 class RequestListenerService(name: String, akkaServerIP: String, localAddress: String, serverPort: Int, requestMap: Map[String, ActorRef]) extends Actor {
 
   val selfPath = "akka.tcp://SprayServer@" + localAddress + ":" + serverPort + "/user/" + name
-  val akkaServerPath = "akka.tcp://AkkaServerServer@" + akkaServerIP + ":" + serverPort + "/user/"
+  val akkaServerPath = "akka.tcp://AkkaServer@" + akkaServerIP + ":" + serverPort + "/user/"
 
   def receive = {
     case _: Http.Connected => sender ! Http.Register(self)
@@ -54,15 +54,16 @@ class RequestListenerService(name: String, akkaServerIP: String, localAddress: S
         }
       }
       val akkaRequest = new AkkaRequest(uuid, selfPath, endPoint, userName, "", tweetText)
-      val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
+      println(akkaServerPath + "TweetsServiceRouter")
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetsServiceRouter")
       akkaServer ! akkaRequest
       //self ! PostUpdateResponse(uuid)
       
       
     //POST Update Response from akka server
     case PostUpdateResponse(uuid: String) =>
+      println("received")
       val ref = requestMap.remove(uuid).get
-      println(ref)
       ref ! HttpResponse(entity = "REQUEST COMPLETE")
 
     /*
