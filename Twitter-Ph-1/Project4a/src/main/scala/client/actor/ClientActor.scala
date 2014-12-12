@@ -24,7 +24,7 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
   val constants = new Constants()
   val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
   val server = context.actorSelection(serverAddress + "/UserRegistrationRouter")
-  val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/"
+  val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.AKKA_CLIENT_PORT + "/user/"
 
   import context.dispatcher
 

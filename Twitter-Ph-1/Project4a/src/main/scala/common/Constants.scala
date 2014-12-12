@@ -4,5 +4,6 @@ package common
 class Constants {
   val AKKA_SERVER_PORT: Int = 4032
   val SPRAY_SERVER_PORT: Int = 9080
+  val AKKA_CLIENT_PORT: Int = 4055
   val UPDATE_TIMEOUT: Int = 2000
 }
