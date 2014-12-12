@@ -39,17 +39,20 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
     case TweetToServer =>
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new AkkaRequest(selfPath + name, "PostUpdate", name, "", getRandomText)
+      val uuid = java.util.UUID.randomUUID().toString()
+      server ! new AkkaRequest(uuid, selfPath + name, "PostUpdate", name, "", getRandomText)
     case LoadHomeTimelineReq =>
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new AkkaRequest(selfPath + name, "GetHomeTimeline", name, "", "")
+      val uuid = java.util.UUID.randomUUID().toString()
+      server ! new AkkaRequest(uuid, selfPath + name, "GetHomeTimeline", name, "", "")
     case LoadHomeTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
-      server ! new AkkaRequest(selfPath + name, "GetUserTimeline", name, "", "")
+      val uuid = java.util.UUID.randomUUID().toString()
+      server ! new AkkaRequest(uuid, selfPath + name, "GetUserTimeline", name, "", "")
     case LoadUserTimelineResp(tweets: Map[String, String]) =>
     //Trash Received tweets from server
     case _ =>

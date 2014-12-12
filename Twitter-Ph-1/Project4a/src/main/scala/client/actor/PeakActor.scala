@@ -19,7 +19,8 @@ class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: 
       val servicePath = serverAddress + "/TweetsServiceRouter"
       val server = context.actorSelection(servicePath)
       println("creating spike load.")
-      server ! new AkkaRequest(selfPath + name, "PostUpdate", name, "", "blah!")
+      val uuid = java.util.UUID.randomUUID().toString()
+      server ! new AkkaRequest(uuid, selfPath + name, "PostUpdate", name, "", "blah!")
     case _ =>
       println("Unknown message received in Peak actor")
   }

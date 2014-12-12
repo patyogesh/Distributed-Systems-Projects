@@ -28,7 +28,7 @@ class TimelineService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserPr
   val numberOfTweetsPerRequest = 20
 
   def receive = {
-    case AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+    case AkkaRequest(uuid: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
       if (endPoint equalsIgnoreCase ("GetMentionsTimeline"))
         getMentionsTimeline(requestActorPath, endPoint, userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("GetHomeTimeline"))

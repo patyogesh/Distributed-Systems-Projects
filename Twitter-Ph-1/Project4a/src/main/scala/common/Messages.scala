@@ -9,7 +9,7 @@ sealed trait Messages
 
 
 //#Request message to Akka server
-case class AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) extends Messages
+case class AkkaRequest(uuid: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) extends Messages
 case class AkkaResponse(status: Boolean, akkaRequest: AkkaRequest) extends Messages
 
 //#RequestListener messages
@@ -30,6 +30,7 @@ case class GetShow() extends Messages
 case class GetOembed() extends Messages
 case class PostRetweet() extends Messages
 case class PostUpdate(tweet: String, favorites: Int) extends Messages
+case class PostUpdateResponse(uuid: String) extends Messages
 case class PostUpdateWithMedia() extends Messages
 case class PostDestroy() extends Messages
 //#

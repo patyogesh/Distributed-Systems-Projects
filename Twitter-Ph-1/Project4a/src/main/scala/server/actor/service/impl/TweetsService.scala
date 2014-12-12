@@ -14,6 +14,8 @@ import main.scala.common.InformLoad
 import scala.collection.mutable.ListBuffer
 import main.scala.common.RegisterTweetLoad
 import scala.collection.mutable.Map
+import main.scala.common.PostUpdateResponse
+
 
 //#This services any tweet request coming form user.
 class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
@@ -23,7 +25,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
   val updateLoad = context.system.scheduler.schedule(0 milliseconds, 2000 milliseconds, self, InformLoad)
 
   def receive = {
-    case AkkaRequest(requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
+    case AkkaRequest(uuid: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
       if (endPoint equalsIgnoreCase ("GetRetweets"))
         getRetweets(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("GetShow"))
@@ -33,7 +35,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
       else if (endPoint equalsIgnoreCase ("PostRetweet"))
         postRetweet(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("PostUpdate"))
-        postUpdate(userName, tweetuuid, tweetText)
+        postUpdate(uuid, requestActorPath, userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("PostUpdateWithMedia"))
         postUpdateWithMedia(userName, tweetuuid, tweetText)
       else if (endPoint equalsIgnoreCase ("PostDestroy"))
@@ -71,7 +73,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
     load += userProfile.followers.length + 2
   }
 
-  def postUpdate(userName: String, tweetuuid: String, tweetText: String) = {
+  def postUpdate(uuid: String, requestActorPath: String, userName: String, tweetuuid: String, tweetText: String) = {
     try {
       //Push to tweet map
       var done = false
@@ -93,6 +95,9 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
       }
       //Register load
       load += userProfile.followers.length + 2
+      //Send Response
+      val ref = context.actorSelection(requestActorPath)
+      ref ! PostUpdateResponse(uuid)
     } catch {
       case e: java.util.NoSuchElementException => //Ignore for Unregistered User println("Username : " + userName)
     }

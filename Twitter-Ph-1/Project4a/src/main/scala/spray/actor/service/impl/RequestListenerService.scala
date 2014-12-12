@@ -6,37 +6,86 @@ import spray.util._
 import spray.http._
 import HttpMethods._
 import main.scala.common._
+import spray.json._
+import DefaultJsonProtocol._
+import spray.http.HttpHeaders._
+import spray.http.ContentTypes._
+import akka.actor.ActorRef
+import scala.collection.mutable.Map
 
-class RequestListenerService(name: String, akkaServerIP: String, localAddress: String, serverPort: Int) extends Actor {
+class RequestListenerService(name: String, akkaServerIP: String, localAddress: String, serverPort: Int, requestMap: Map[String, ActorRef]) extends Actor {
 
   val selfPath = "akka.tcp://SprayServer@" + localAddress + ":" + serverPort + "/user/" + name
   val akkaServerPath = "akka.tcp://AkkaServerServer@" + akkaServerIP + ":" + serverPort + "/user/"
-  
+
   def receive = {
     case _: Http.Connected => sender ! Http.Register(self)
 
-    case HttpRequest(GET, Uri.Path("/ping"), header, entity, protocol) =>
+    //Sample request
+    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/ping" =>
       println("PING")
+      val args: Array[String] = path.split("/")
+      
+      println(header)
+      val payload = entity.asString
+      println(payload)
+      val jsonPayload = payload.asJson
+      val map = jsonPayload.convertTo[scala.collection.immutable.Map[String, String]] //Either[String, List[String]]]]
+      val value = map.get("text").get
+      println(value)
+      sender ! HttpResponse(entity = """{ received : """ + value + """}""", headers = List(`Content-Type`(`application/json`)))
 
-    //GET Usertimeline Request
+    //TWEET SERVICES
+    //POST Update
+    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/update" =>
+      val args: Array[String] = path.split("/")
+      val service = args(1)
+      val endPoint = "POST" + args(2)
+      val userName = args(3)
+      val payloadMap = entity.asString.asJson.convertTo[scala.collection.immutable.Map[String, String]]
+      val tweetText = payloadMap.get("text").get
+      var done = false
+      var uuid: String = ""
+      while (!done) {
+        uuid = java.util.UUID.randomUUID().toString()
+        if (requestMap.get(uuid) == None) {
+          requestMap += uuid -> sender
+          done = true
+        }
+      }
+      val akkaRequest = new AkkaRequest(uuid, selfPath, endPoint, userName, "", tweetText)
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
+      akkaServer ! akkaRequest
+      //self ! PostUpdateResponse(uuid)
+      
+      
+    //POST Update Response from akka server
+    case PostUpdateResponse(uuid: String) =>
+      val ref = requestMap.remove(uuid).get
+      println(ref)
+      ref ! HttpResponse(entity = "REQUEST COMPLETE")
+
+    /*
+      //TIMELINE SERVICES
+    //GET Usertimeline Request to akka server
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/usertimeline" =>
       val args: Array[String] = path.split("/")
       val service = args(1)
-      val endPoint = "Get" + args(2)
+      val endPoint = "GET" + args(2)
       val userName = args(3)
       val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
       val akkaServer = context.actorSelection(akkaServerPath + "TimelineServiceRouter")
-      akkaServer ! akkaRequest
+    //akkaServer ! akkaRequest
 
     //Response from akka server for Usertimeline
     case LoadUserTimelineResp(tweets: Map[String, String]) =>
       println("Result Length : " + tweets.size)
 
-    //GET Hometimeline
+    //GET Hometimeline Request to akka server
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/hometimeline" =>
       val args: Array[String] = path.split("/")
       val service = args(1)
-      val endPoint = "Get" + args(2)
+      val endPoint = "GET" + args(2)
       val userName = args(3)
       val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
       val akkaServer = context.actorSelection(akkaServerPath + "TimelineServiceRouter")
@@ -45,6 +94,8 @@ class RequestListenerService(name: String, akkaServerIP: String, localAddress: S
     //Response from akka server for Hometimeline
     case LoadHomeTimelineResp(tweets: Map[String, String]) =>
       println("Result Length : " + tweets.size)
+
+      
 
     //GET Retweets
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/retweets" =>
@@ -82,9 +133,11 @@ class RequestListenerService(name: String, akkaServerIP: String, localAddress: S
       val service = args(1)
       val endPoint = "Get" + args(2)
       val userName = args(3)
+      val payload = entity.asString
+      println(payload)
       val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
       val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
-      akkaServer ! akkaRequest
+    //akkaServer ! akkaRequest
 
     //POST Destroy
     case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/destroy" =>
@@ -118,7 +171,7 @@ class RequestListenerService(name: String, akkaServerIP: String, localAddress: S
 
     case AkkaResponse =>
     //send httprequest
-
+*/
     /*case HttpRequest(GET, Uri.Path(path), _, _, _) if path startsWith "/tweet/update"=>
       println("TWEET RECEIVED")
       println(path)
