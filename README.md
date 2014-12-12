@@ -22,10 +22,10 @@ TODO
 	 USE differant ports for each instance. This will enable *multiple parallel physical connections* from SOAP 
 	 client to SPRAY server.
 	 
-	 2. Non-blocking processing of request response at Spray. Do not wait for Akka response (using futures)
+  2. Non-blocking processing of request response at Spray. Do not wait for Akka response (using futures)
 	 to reply to client.
 	 
-	 Solution:
+  Solution:
 	  Use NAT kind of a feature that keeps track of requence source (IP/Sender-reference) and use it to reply to 
 	  client once AKKA resp received.
 	  
