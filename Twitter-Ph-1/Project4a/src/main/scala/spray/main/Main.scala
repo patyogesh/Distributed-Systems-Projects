@@ -4,10 +4,10 @@ import akka.actor.ActorSystem
 import akka.io.IO
 import spray.can.Http
 import akka.actor.actorRef2Scala
-import spray.actor.service.router.RequestListenerRouter
 import akka.actor.Props
 import spray.actor.service.impl.RequestListenerService
 import common.Constants
+import akka.actor.ActorRef
 
 object Main {
 
@@ -16,15 +16,14 @@ object Main {
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val cores: Int = Runtime.getRuntime().availableProcessors();
     val constants = new Constants()
-    
-    
+
     implicit val system = ActorSystem("SprayServer")
 
     // the handler actor replies to incoming HttpRequests
-    //val handler = system.actorOf(Props(new RequestListenerRouter(cores)), name = "handler")
-    val handler = system.actorOf(Props(new RequestListenerService(akkaServerIP, localAddress, constants.SERVER_PORT)), name = "RequestListener")
-
-    IO(Http) ! Http.Bind(handler, interface = "localhost", port = 9080)
+    var handler: ActorRef = null
+    for (i <- 1 to 2 * cores) {
+      handler = system.actorOf(Props(new RequestListenerService("RequestListener" + i, akkaServerIP, localAddress, constants.SERVER_PORT)), name = "RequestListener" + i)
+      IO(Http) ! Http.Bind(handler, interface = "localhost", port = 9080)
+    }
   }
-
 }

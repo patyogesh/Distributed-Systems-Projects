@@ -7,13 +7,16 @@ import spray.http._
 import HttpMethods._
 import main.scala.common._
 
-class RequestListenerService(akkaServerIP: String, localAddress: String, serverPort: Int) extends Actor {
+class RequestListenerService(name: String, akkaServerIP: String, localAddress: String, serverPort: Int) extends Actor {
 
-  val selfPath = "akka.tcp://SprayServer@" + localAddress + ":" + serverPort + "/user/RequestListener"
+  val selfPath = "akka.tcp://SprayServer@" + localAddress + ":" + serverPort + "/user/" + name
   val akkaServerPath = "akka.tcp://AkkaServerServer@" + akkaServerIP + ":" + serverPort + "/user/"
-
+  
   def receive = {
     case _: Http.Connected => sender ! Http.Register(self)
+
+    case HttpRequest(GET, Uri.Path("/ping"), header, entity, protocol) =>
+      println("PING")
 
     //GET Usertimeline Request
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/usertimeline" =>
@@ -28,7 +31,6 @@ class RequestListenerService(akkaServerIP: String, localAddress: String, serverP
     //Response from akka server for Usertimeline
     case LoadUserTimelineResp(tweets: Map[String, String]) =>
       println("Result Length : " + tweets.size)
-      
 
     //GET Hometimeline
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/hometimeline" =>
@@ -43,20 +45,57 @@ class RequestListenerService(akkaServerIP: String, localAddress: String, serverP
     //Response from akka server for Hometimeline
     case LoadHomeTimelineResp(tweets: Map[String, String]) =>
       println("Result Length : " + tweets.size)
-     
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+
+    //GET Retweets
+    case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/retweets" =>
+      val args: Array[String] = path.split("/")
+      val service = args(1)
+      val endPoint = "Get" + args(2)
+      val userName = args(3)
+      val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
+      akkaServer ! akkaRequest
+
+    //GET Show
+    case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/show" =>
+      val args: Array[String] = path.split("/")
+      val service = args(1)
+      val endPoint = "Get" + args(2)
+      val userName = args(3)
+      val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
+      akkaServer ! akkaRequest
+
+    //POST Retweet
+    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/retweet" =>
+      val args: Array[String] = path.split("/")
+      val service = args(1)
+      val endPoint = "Get" + args(2)
+      val userName = args(3)
+      val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
+      akkaServer ! akkaRequest
+
+    //POST Update
+    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/update" =>
+      val args: Array[String] = path.split("/")
+      val service = args(1)
+      val endPoint = "Get" + args(2)
+      val userName = args(3)
+      val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
+      akkaServer ! akkaRequest
+
+    //POST Destroy
+    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/destroy" =>
+      val args: Array[String] = path.split("/")
+      val service = args(1)
+      val endPoint = "Get" + args(2)
+      val userName = args(3)
+      val akkaRequest = new AkkaRequest(selfPath, endPoint, userName, "", "")
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetServiceRouter")
+      akkaServer ! akkaRequest
+
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) =>
       val args: Array[String] = path.split("/")
       val service = args(1)
