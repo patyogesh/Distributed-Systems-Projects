@@ -18,7 +18,7 @@ object Main {
     val akkaServerIP = args(0)
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    val port = constants.SERVER_PORT
+    val port = constants.SPRAY_SERVER_PORT
     val cores: Int = Runtime.getRuntime().availableProcessors();
 
     val requestMap: concurrent.Map[String, ActorRef] = new ConcurrentHashMap().asScala

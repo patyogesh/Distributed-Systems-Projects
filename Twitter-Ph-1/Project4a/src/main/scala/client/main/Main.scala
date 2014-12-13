@@ -39,7 +39,7 @@ object Main {
 
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    val serverAddress: String = "akka.tcp://AkkaServer@" + hostAddress + ":" + constants.SERVER_PORT + "/user"
+    val serverAddress: String = "akka.tcp://AkkaServer@" + hostAddress + ":" + constants.AKKA_SERVER_PORT + "/user"
 
     //Scale time
     val offset = (24 * 3600) / (clients * timeMultiplier)
@@ -52,7 +52,7 @@ object Main {
     enabled-transports = ["akka.remote.netty.tcp"]
     netty.tcp {
       hostname = """ + localAddress + """
-      port = """ + constants.SERVER_PORT + """
+      port = """ + constants.AKKA_CLIENT_PORT + """
     }
  }
 }"""
@@ -68,7 +68,7 @@ object Main {
       val startTime: Int = args(4).toInt
       val interval: Int = args(5).toInt
       peakActorFollowersCount = args(6).toInt
-      val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/PeakActor"
+      val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.AKKA_CLIENT_PORT + "/user/PeakActor"
       peakActor = system.actorOf(Props(new PeakActor(startTime, interval, serverAddress, selfPath, "PeakActor@" + localAddress)), "PeakActor")
       peakActorName = "PeakActor"
     } catch {
@@ -77,7 +77,7 @@ object Main {
 
     //#This class instantiates the user actors on client side and starts them when registration on server side is complete.
     val clientActorFactory = system.actorOf(Props(new ClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier, peakActor)), "ClientActorFactory")
-    val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.SERVER_PORT + "/user/ClientActorFactory"
+    val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.AKKA_CLIENT_PORT + "/user/ClientActorFactory"
 
     val server = system.actorSelection(serverAddress + "/UserRegistrationRouter")
     server ! RegisterUsers(localAddress, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount)

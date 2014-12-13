@@ -34,7 +34,7 @@ object Main {
     enabled-transports = ["akka.remote.netty.tcp"]
     netty.tcp {
       hostname = """ + hostAddress + """
-      port = """ + constants.SERVER_PORT + """
+      port = """ + constants.AKKA_SERVER_PORT + """
     }
  }
 }"""
