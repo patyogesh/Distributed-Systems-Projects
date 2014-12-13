@@ -18,7 +18,8 @@ object Main {
     val akkaServerIP = args(0)
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    val port = constants.SPRAY_SERVER_PORT
+    val localPort = constants.SPRAY_SERVER_PORT
+    val akkaPort = constants.AKKA_SERVER_PORT 
     val cores: Int = Runtime.getRuntime().availableProcessors();
 
     val requestMap: concurrent.Map[String, ActorRef] = new ConcurrentHashMap().asScala
@@ -27,8 +28,8 @@ object Main {
 
     // the handler actor replies to incoming HttpRequests
     var handler: ActorRef = null
-    handler = system.actorOf(Props(new RequestListenerService("RequestListener1", akkaServerIP, localAddress, port, requestMap)), name = "RequestListener1")
-    IO(Http) ! Http.Bind(handler, interface = localAddress, port = port)
+    handler = system.actorOf(Props(new RequestListenerService("RequestListener1", akkaServerIP, akkaPort, localAddress, localPort, requestMap)), name = "RequestListener1")
+    IO(Http) ! Http.Bind(handler, interface = localAddress, port = localPort)
     /*for (i <- 1 to 2 * cores) {
       handler = system.actorOf(Props(new RequestListenerService("RequestListener" + i, akkaServerIP, localAddress, port, requestMap)), name = "RequestListener" + i)
       IO(Http) ! Http.Bind(handler, interface = localAddress, port = port)
