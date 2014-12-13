@@ -1,4 +1,4 @@
-package server.actor.service.impl
+package main.scala.server.actor.service.impl
 
 import akka.actor.Actor
 import scala.concurrent.duration._

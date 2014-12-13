@@ -5,7 +5,7 @@ import akka.actor.ActorSelection
 import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
 import main.scala.common.ServiceRequest
-import common.Constants
+import main.scala.common.Constants
 import main.scala.common.TweetToServer
 import main.scala.common.AkkaRequest
 import main.scala.common.LoadHomeTimeline

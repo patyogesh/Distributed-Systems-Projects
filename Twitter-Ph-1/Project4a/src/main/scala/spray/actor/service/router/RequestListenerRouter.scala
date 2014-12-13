@@ -1,4 +1,4 @@
-//package spray.actor.service.router
+//package main.scala.spray.actor.service.router
 //
 //import akka.actor.Actor
 //import akka.actor.Props

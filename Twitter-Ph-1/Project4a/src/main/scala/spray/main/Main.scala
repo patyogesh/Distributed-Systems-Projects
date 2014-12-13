@@ -1,12 +1,12 @@
-package spray.main
+package main.scala.spray.main
 
 import akka.actor.ActorSystem
 import akka.io.IO
 import spray.can.Http
 import akka.actor.actorRef2Scala
 import akka.actor.Props
-import spray.actor.service.impl.RequestListenerService
-import common.Constants
+import main.scala.spray.actor.service.impl.RequestListenerService
+import main.scala.common.Constants
 import akka.actor.ActorRef
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection._
@@ -27,7 +27,7 @@ object Main {
 
     // the handler actor replies to incoming HttpRequests
     var handler: ActorRef = null
-    handler = system.actorOf(Props(new RequestListenerService("RequestListener", akkaServerIP, localAddress, port, requestMap)), name = "RequestListener")
+    handler = system.actorOf(Props(new RequestListenerService("RequestListener1", akkaServerIP, localAddress, port, requestMap)), name = "RequestListener1")
     IO(Http) ! Http.Bind(handler, interface = localAddress, port = port)
     /*for (i <- 1 to 2 * cores) {
       handler = system.actorOf(Props(new RequestListenerService("RequestListener" + i, akkaServerIP, localAddress, port, requestMap)), name = "RequestListener" + i)

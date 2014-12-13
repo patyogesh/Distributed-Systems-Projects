@@ -3,7 +3,7 @@ package main.scala.server.actor.service.router
 import akka.actor.Actor
 import akka.actor.Terminated
 import akka.actor.Props
-import server.actor.service.impl.TweetsService
+import main.scala.server.actor.service.impl.TweetsService
 import akka.routing.Router
 import akka.routing.RoundRobinRoutingLogic
 import akka.routing.ActorRefRoutee
@@ -30,7 +30,7 @@ class TweetsServiceRouter(count: Int, loadMonitor: ActorRef, userProfilesMap: sc
 
   def receive = {
     case AkkaRequest(uuid: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) =>
-      router.route(AkkaRequest(uuid: String, requestActorPath, endPoint, userName, tweetuuid, tweetText), sender)
+      router.route(AkkaRequest(uuid, requestActorPath, endPoint, userName, tweetuuid, tweetText), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new TweetsService(loadMonitor, userProfilesMap, tweetsMap)))

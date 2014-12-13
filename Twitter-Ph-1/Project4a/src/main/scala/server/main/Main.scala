@@ -4,9 +4,9 @@ import akka.actor.ActorSystem
 import akka.actor.ActorRef
 import akka.actor.Props
 import akka.routing.SmallestMailboxRouter
-import server.actor.service.impl._
+import main.scala.server.actor.service.impl._
 import com.typesafe.config.ConfigFactory
-import common.Constants
+import main.scala.common.Constants
 import main.scala.common.UserProfile
 import main.scala.common.Tweet
 import main.scala.server.actor.service.router.UserRegistrationRouter

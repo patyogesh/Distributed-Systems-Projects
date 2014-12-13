@@ -1,4 +1,4 @@
-package client.actor
+package main.scala.client.actor
 
 import akka.actor.Actor
 import main.scala.common.TweetToServer

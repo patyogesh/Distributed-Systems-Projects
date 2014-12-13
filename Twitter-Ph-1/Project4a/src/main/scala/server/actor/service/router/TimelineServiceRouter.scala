@@ -2,7 +2,7 @@ package main.scala.server.actor.service.router
 
 import akka.actor.Actor
 import akka.actor.Props
-import server.actor.service.impl.TimelineService
+import main.scala.server.actor.service.impl.TimelineService
 import akka.routing.ActorRefRoutee
 import akka.routing.Router
 import akka.routing.RoundRobinRoutingLogic

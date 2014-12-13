@@ -1,4 +1,4 @@
-package spray.actor.service.impl
+package main.scala.spray.actor.service.impl
 
 import akka.actor.Actor
 import spray.can.Http
@@ -25,7 +25,6 @@ class RequestListenerService(name: String, akkaServerIP: String, localAddress: S
     case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/ping" =>
       println("PING")
       val args: Array[String] = path.split("/")
-      
       println(header)
       val payload = entity.asString
       println(payload)
@@ -53,11 +52,15 @@ class RequestListenerService(name: String, akkaServerIP: String, localAddress: S
           done = true
         }
       }
-      val akkaRequest = new AkkaRequest(uuid, selfPath, endPoint, userName, "", tweetText)
+      //send to akka server
       val akkaServer = context.actorSelection(akkaServerPath + "TweetsServiceRouter")
-      //akkaServer ! akkaRequest
-      println("Sent to akka server")
-      self ! PostUpdateResponse(uuid)
+      akkaServer ! new AkkaRequest(uuid, selfPath, endPoint, userName, "", tweetText)
+      
+      val test = context.actorSelection(akkaServerPath + "Test")
+      test ! new Timeline()
+      
+      println("Sent to akka server : " + akkaServerPath + "Test")
+      //self ! PostUpdateResponse(uuid)
       
       
     //POST Update Response from akka server

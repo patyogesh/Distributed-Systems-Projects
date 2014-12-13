@@ -5,10 +5,10 @@ import akka.actor.Props
 import main.scala.client.actor.ClientActor
 import akka.actor.ActorRef
 import com.typesafe.config.ConfigFactory
-import common.Constants
+import main.scala.common.Constants
 import main.scala.common.ServiceRequest
 import main.scala.client.actor.ClientActorFactory
-import client.actor.PeakActor
+import main.scala.client.actor.PeakActor
 import main.scala.common.RegisterUsers
 import main.scala.client.actor.ClientActorFactory
 import main.scala.common.RegisterUsers
