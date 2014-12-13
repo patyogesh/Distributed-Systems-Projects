@@ -15,11 +15,11 @@ import main.scala.common.Constants
 class SprayActor extends Actor {
   private implicit val timeout: Timeout = 5.seconds
   val constants = new Constants()
-  val host: String = "172.16.110.187:" + constants.SPRAY_CLIENT_PORT
+  val host: String = "172.16.110.167:" + constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES 
   implicit val system: ActorSystem = ActorSystem()
   import system.dispatcher // execution context for future transformation below
   for {
-    response <- IO(Http).ask(HttpRequest(GET, Uri(s"http://$host/ping"))).mapTo[HttpResponse]
+    response <- IO(Http).ask(HttpRequest(POST, Uri("http://$host/ping"))).mapTo[HttpResponse]
     _ <- IO(Http) ? Http.CloseAll
   } yield {
     system.log.info("Request-Level API: received {} response with {} bytes",
