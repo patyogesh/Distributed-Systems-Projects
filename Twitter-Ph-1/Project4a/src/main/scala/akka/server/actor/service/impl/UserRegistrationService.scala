@@ -58,7 +58,6 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       }
       val factory = context.actorSelection(clientFactoryPath)
       factory ! Start*/
-      println("Registration request on akka server")
       val taskCount = userProfileCreatorRouter.routees.length
       val taskSize: Int = Math.ceil(clients / taskCount).toInt
       jobMap += jobID -> new Job(jobID, requestUUID, taskCount, taskSize, clientFactoryPath)
@@ -77,14 +76,12 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
         usersRegistered += 1
       }
     case TaskComplete(jobID) =>
-      println("Complete")
       val job: Job = jobMap.get(jobID).get
       job.remainingJobs -= 1
       usersRegistered += job.jobSize
       if (job.remainingJobs == 0) {
         val factory = context.actorSelection(job.clientFactoryPath)
         factory ! Start(job.requestUUID)
-        println("Registration complete on akka server")
       }
     case UpdateRegisteredUserCount =>
       loadMonitor ! UserCount(usersRegistered)

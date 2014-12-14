@@ -35,12 +35,14 @@ class SprayClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int,
       val userTimeline = context.system.scheduler.schedule((offset / 1) * 1000 milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
 
     case TweetToServer =>
+      println("Tweeting " + name)
       val uuid = java.util.UUID.randomUUID().toString()
       import system.dispatcher // execution context for future transformation below
       for {
-        response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/tweet/update/bhavnesh"), entity = """{ "text" : """" + getRandomText + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]
+        response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/tweet/update/"+ name), entity = """{ "text" : """" + getRandomText + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]
         _ <- IO(Http) ? Http.CloseAll
       } yield {
+        println("Done")
         //system.log.info("Request-Level API: received {} response with {} bytes",
         // response.status, response.entity.data.length)
         //response.header[HttpHeaders.Server].get.products.head
@@ -49,7 +51,7 @@ class SprayClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int,
       val uuid = java.util.UUID.randomUUID().toString()
       import system.dispatcher // execution context for future transformation below
       for {
-        response <- IO(Http).ask(HttpRequest(method = GET, uri = Uri(s"http://$serverAddress/timeline/hometimeline/bhavnesh"))).mapTo[HttpResponse]
+        response <- IO(Http).ask(HttpRequest(method = GET, uri = Uri(s"http://$serverAddress/timeline/hometimeline/" + name))).mapTo[HttpResponse]
         _ <- IO(Http) ? Http.CloseAll
       } yield {
         //system.log.info("Request-Level API: received {} response with {} bytes",
@@ -60,7 +62,7 @@ class SprayClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int,
       val uuid = java.util.UUID.randomUUID().toString()
       import system.dispatcher // execution context for future transformation below
       for {
-        response <- IO(Http).ask(HttpRequest(method = GET, uri = Uri(s"http://$serverAddress/timeline/usertimeline/bhavnesh"))).mapTo[HttpResponse]
+        response <- IO(Http).ask(HttpRequest(method = GET, uri = Uri(s"http://$serverAddress/timeline/usertimeline/"+ name))).mapTo[HttpResponse]
         _ <- IO(Http) ? Http.CloseAll
       } yield {
         //system.log.info("Request-Level API: received {} response with {} bytes",

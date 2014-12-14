@@ -36,7 +36,6 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
     //USER REGISTRATION
     //Register multiple users to akka server
     case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/userregistration" =>
-      println("Registration request on spray server")
       val payloadMap = entity.asString.asJson.convertTo[scala.collection.immutable.Map[String, String]]
       val ip = payloadMap.get("ip").get
       val clients = payloadMap.get("clients").get.toInt
@@ -60,12 +59,10 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
     case Start(requestUUID: String) =>
       //requestMap.get(requestUUID).get ! Start
       requestMap.remove(requestUUID).get ! HttpResponse()
-      println("Registration on spray server complete")
 
     //TWEET SERVICES
     //POST Update
     case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/update" =>
-      println("Tweet")
       val args: Array[String] = path.split("/")
       val service = args(1)
       val endPoint = "POST" + args(2)

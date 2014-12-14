@@ -12,7 +12,7 @@ class SprayClientActorFactory(clients: Int, serverAddress: String, followers: Ar
 
   val clientActors = ListBuffer[ActorRef]()
   for (i <- 0 to clients - 1) {
-    clientActors += context.system.actorOf(Props(new SprayClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "SprayClient" + i + "@" + localAddress, clients, timeMultiplier)), "SprayClient" + i + "@" + localAddress)
+    clientActors += context.system.actorOf(Props(new SprayClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "Client" + i + "@" + localAddress, clients, timeMultiplier)), "Client" + i + "@" + localAddress)
   }
   def receive = {
     case Start =>
