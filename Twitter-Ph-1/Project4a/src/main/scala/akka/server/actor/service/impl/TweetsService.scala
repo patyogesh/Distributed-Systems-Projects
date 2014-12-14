@@ -69,7 +69,7 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
     load += userProfile.followers.length + 2
   }
 
-  def postUpdate(uuid: String, requestActorPath: String, userName: String, tweetuuid: String, tweetText: String) = {
+  def postUpdate(requestUUID: String, requestActorPath: String, userName: String, tweetuuid: String, tweetText: String) = {
     try {
       //Push to tweet map
       var done = false
@@ -88,12 +88,12 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
       //Push to followers
       for (follower <- userProfile.followers) {
         uuid +=: userProfilesMap.get(follower).get.homeTimeline
-      }
+      }      
       //Register load
       load += userProfile.followers.length + 2
-      //Send Response
+      //Send Response      
       val ref = context.actorSelection(requestActorPath)
-      ref ! PostUpdateResponse(uuid)
+      ref ! PostUpdateResponse(requestUUID)      
     } catch {
       case e: java.util.NoSuchElementException => //Ignore for Unregistered User println("Username : " + userName)
     }

@@ -79,14 +79,15 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
         }
       }
       //send request to akka server
-      val akkaServer = context.actorSelection(akkaServerPath + "TweetsServiceRouter")
+      val akkaServer = context.actorSelection(akkaServerPath + "TweetsServiceRouter")      
       akkaServer ! new AkkaRequest(uuid, selfPath, endPoint, userName, "", tweetText)
-
+      
     //POST Update Response from akka server
-    case PostUpdateResponse(uuid: String) =>
+    case PostUpdateResponse(requestUUID: String) =>
       //val ref = requestMap.remove(uuid).get
-      requestMap.remove(uuid).get ! HttpResponse()
-
+      requestMap.get(requestUUID).get ! HttpResponse()
+      requestMap.remove(requestUUID)
+      
     //TIMELINE SERVICES
     //GET Usertimeline Request to akka server
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/usertimeline" =>
