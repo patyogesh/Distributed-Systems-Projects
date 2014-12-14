@@ -63,4 +63,4 @@ case class LoadHomeTimelineResp(tweets: Map[String, String]) extends Messages
 case class LoadUserTimelineReq() extends Messages
 case class LoadUserTimelineResp(tweets: Map[String, String]) extends Messages
 
-case class Start() extends Messages
+case class Start(uuid: String) extends Messages

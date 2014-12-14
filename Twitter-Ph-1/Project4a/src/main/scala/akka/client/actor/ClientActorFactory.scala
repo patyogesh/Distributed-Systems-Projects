@@ -16,7 +16,7 @@ class ClientActorFactory(clients: Int, serverAddress: String, followers: Array[I
   
   def receive = {
     case Start =>
-      println("Registration of clinets on server successful. Starting Load on server.")
+      println("Registration of clients on server successful. Starting Load on server.")
       if (peakActor != null)
         peakActor ! Start
       clientActors.foreach(ref => ref ! Start)

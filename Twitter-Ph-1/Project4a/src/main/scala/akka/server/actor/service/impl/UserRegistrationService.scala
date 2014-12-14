@@ -70,7 +70,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       println("Received")
       val taskCount = userProfileCreatorRouter.routees.length
       val taskSize: Int = Math.ceil(clients / taskCount).toInt
-      jobMap += jobID -> new Job(jobID, taskCount, taskSize, clientFactoryPath)
+      jobMap += jobID -> new Job(jobID, requestUUID, taskCount, taskSize, clientFactoryPath)
       for (i <- 0 to taskCount - 1) {
         userProfileCreatorRouter.route(CreateUserProfiles(jobID, i * taskSize, Math.min(((i + 1) * taskSize) - 1, clients - 1), ip, userProfilesMap, followers, sampleSize, self.path.toString()), sender)
       }
@@ -92,7 +92,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       usersRegistered += job.jobSize
       if (job.remainingJobs == 0) {
         val factory = context.actorSelection(job.clientFactoryPath)
-        factory ! Start
+        factory ! Start(job.requestUUID)
       }
     case UpdateRegisteredUserCount =>
       loadMonitor ! UserCount(usersRegistered)
@@ -106,7 +106,8 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
   }
 }
 
-class Job(jobID: Int, numberOfJobs: Int, jobsize: Int, clientfactorypath: String) {
+class Job(jobID: Int, uuid: String, numberOfJobs: Int, jobsize: Int, clientfactorypath: String) {
+  val requestUUID = uuid
   var remainingJobs: Int = numberOfJobs
   val clientFactoryPath = clientfactorypath
   val jobSize = jobsize

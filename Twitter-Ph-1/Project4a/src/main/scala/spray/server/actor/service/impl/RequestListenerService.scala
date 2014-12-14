@@ -58,11 +58,11 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       //send request to akka server
       val akkaServer = context.actorSelection(akkaServerPath + "UserRegistrationRouter")
       akkaServer ! RegisterUsers(uuid, ip, clients, selfPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
-      println("Sent")
 
-    case RegistrationComplete(uuid: String) =>
-      println("Registration complete")
-
+    case Start(requestUUID: String) =>
+      //requestMap.get(requestUUID).get ! Start
+      requestMap.remove(requestUUID).get ! Start
+      
     //TWEET SERVICES
     //POST Update
     case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/update" =>
@@ -87,10 +87,8 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
 
     //POST Update Response from akka server
     case PostUpdateResponse(uuid: String) =>
-      println("Received from akka server")
-      val ref = requestMap.remove(uuid).get
-      println(ref)
-      ref ! HttpResponse()
+      //val ref = requestMap.remove(uuid).get
+      requestMap.remove(uuid).get ! HttpResponse()
 
     /*
       //TIMELINE SERVICES
