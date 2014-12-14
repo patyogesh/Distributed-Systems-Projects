@@ -45,7 +45,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       val userProfile: UserProfile = new UserProfile(userName, new ListBuffer[String], new ListBuffer[String], new ListBuffer[String])
       userProfilesMap += userName -> userProfile
       usersRegistered += 1
-    case RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int) =>
+    case RegisterUsers(requestUUID: String, ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int) =>
       /*for (i <- 0 to clients - 1) {
         val userProfile: UserProfile = new UserProfile("Client" + i + "@" + ip, new ListBuffer[String], new ListBuffer[String], new ListBuffer[String])
         userProfilesMap += "Client" + i + "@" + ip -> userProfile

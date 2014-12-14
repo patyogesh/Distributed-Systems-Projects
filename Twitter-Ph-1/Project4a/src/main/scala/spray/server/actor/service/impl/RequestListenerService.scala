@@ -13,7 +13,7 @@ import spray.http.ContentTypes._
 import akka.actor.ActorRef
 import scala.collection.mutable.Map
 
-class RequestListenerService(name: String, localAddress: String, localAkkaMessagePort: Int, akkaServerAddress: String, akkaServerPort: Int, requestMap: Map[String, ActorRef]) extends Actor {
+class RequestListenerService(name: String, localAddress: String, localAkkaMessagePort: Int, akkaServerAddress: String, akkaServerPort: Int, followers: Array[Int], requestMap: Map[String, ActorRef]) extends Actor {
 
   val selfPath = "akka.tcp://SprayServer@" + localAddress + ":" + localAkkaMessagePort + "/user/" + name
   val akkaServerPath = "akka.tcp://AkkaServer@" + akkaServerAddress + ":" + akkaServerPort + "/user/"
@@ -44,7 +44,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       val sampleSize = payloadMap.get("sampleSize").get.toInt
       val peakActorName = payloadMap.get("peakActorName").get
       val peakActorFollowersCount = payloadMap.get("peakActorFollowersCount").get.toInt
-      //val followers: Array[Int] = payloadMap.get("followers").get.toA
+
       println("GOT IT!")
       var done = false
       var uuid: String = ""
@@ -56,9 +56,12 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
         }
       }
       //send request to akka server
-      val akkaServer = context.actorSelection(akkaServerPath + "TweetsServiceRouter")
-      //akkaServer ! RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int)
-      
+      val akkaServer = context.actorSelection(akkaServerPath + "UserRegistrationRouter")
+      akkaServer ! RegisterUsers(uuid, ip, clients, selfPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
+
+    case RegistrationComplete(uuid: String) =>
+      println("Registration complete")
+
     //TWEET SERVICES
     //POST Update
     case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/update" =>

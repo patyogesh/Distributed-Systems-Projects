@@ -29,8 +29,8 @@ class UserRegistrationRouter(count: Int, loadMonitor: ActorRef, userProfilesMap:
   def receive = {
     case RegisterUser(userName: String) =>
       router.route(RegisterUser(userName), sender)
-    case RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int) =>
-      router.route(RegisterUsers(ip, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount), sender)
+    case RegisterUsers(uuid: String, ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int) =>
+      router.route(RegisterUsers(uuid, ip, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount), sender)
     case Terminated(a) =>
       router = router.removeRoutee(a)
       val r = context.actorOf(Props(new UserRegistrationService(count, loadMonitor, userProfilesMap, tweetsMap)))

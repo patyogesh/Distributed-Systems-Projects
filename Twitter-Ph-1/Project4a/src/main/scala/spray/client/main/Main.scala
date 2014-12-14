@@ -92,9 +92,10 @@ object Main {
     implicit val timeout: Timeout = 5.seconds
     println("sending registration request : " + serverAddress)
     for {
-      response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/userregistration"), entity = """{ "ip" : """" + serverAddress.split(":")(0) + """" , "clients" : """" + clients + """" , "sampleSize" : """" + sampleSize + """" , "peakActorFollowersCount" : """" + peakActorFollowersCount + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]
+      response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/userregistration"), entity = """{ "ip" : """" + serverAddress.split(":")(0) + """" , "clients" : """" + clients + """" , "sampleSize" : """" + sampleSize + """" , "peakActorName" : """" + peakActorName + """" , "peakActorFollowersCount" : """" + peakActorFollowersCount + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]
       _ <- IO(Http) ? Http.CloseAll
     } yield {
+      println("Done on server")
       clientActorFactory ! Start
     }
 

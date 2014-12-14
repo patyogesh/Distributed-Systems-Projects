@@ -9,7 +9,7 @@ sealed trait Messages
 
 
 //#Request message to Akka server
-case class AkkaRequest(uuid: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) extends Messages
+case class AkkaRequest(requestUUID: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) extends Messages
 case class AkkaResponse(status: Boolean, akkaRequest: AkkaRequest) extends Messages
 
 //#RequestListener messages
@@ -49,7 +49,8 @@ case class UserCount(count: Int) extends Messages
 
 //#User Registration Messages
 case class RegisterUser(userName: String) extends Messages
-case class RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int) extends Messages
+case class RegisterUsers(requestUUID: String, ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int) extends Messages
+case class RegistrationComplete(requestUUID: String) extends Messages
 case class UpdateRegisteredUserCount() extends Messages
 case class CreateUserProfiles(jobId: Int, start: Int, end: Int, ip: String, userProfilesMap: Map[String, UserProfile], followers: Array[Int], sampleSize: Int, senderPath: String) extends Messages
 case class TaskComplete(jobID: Int) extends Messages

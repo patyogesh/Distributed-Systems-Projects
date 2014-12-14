@@ -9,4 +9,6 @@ class Constants {
   val SPRAY_CLIENT_PORT_FOR_HTTP_MESSAGES: Int = 7175
   val SPRAY_CLIENT_PORT_FOR_AKKA_MESSAGES: Int = 7176
   val UPDATE_TIMEOUT: Int = 2000
+  
+  val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
 }

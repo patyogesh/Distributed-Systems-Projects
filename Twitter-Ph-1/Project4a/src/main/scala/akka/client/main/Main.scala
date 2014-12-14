@@ -78,7 +78,7 @@ object Main {
     val clientFactoryPath: String = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.AKKA_CLIENT_PORT + "/user/ClientActorFactory"
 
     val server = system.actorSelection(serverAddress + "/UserRegistrationRouter")
-    server ! RegisterUsers(localAddress, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
+    server ! RegisterUsers(java.util.UUID.randomUUID().toString(), localAddress, clients, clientFactoryPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
 
   }
 }
