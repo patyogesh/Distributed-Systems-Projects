@@ -31,7 +31,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       val map = jsonPayload.convertTo[scala.collection.immutable.Map[String, String]] //Either[String, List[String]]]]
       val value = map.get("text").get
       println(value)
-      sender ! HttpResponse(entity = """{ received : """ + value + """}""", headers = List(`Content-Type`(`application/json`)))
+      sender ! HttpResponse(entity = HttpEntity(`application/json`, """{ received : """ + value + """}"""))
 
     //USER REGISTRATION
     //Register multiple users to akka server
@@ -107,7 +107,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
 
     //Response from akka server for Usertimeline
     case LoadUserTimelineResp(requestUUID: String, tweets: Map[String, String]) =>
-      requestMap.remove(requestUUID).get ! HttpResponse(entity = """{ received : """ + tweets + """}""", headers = List(`Content-Type`(`application/json`)))
+      requestMap.remove(requestUUID).get ! HttpResponse(entity = HttpEntity(`application/json`, """{ received : """ + tweets + """}"""))
 
     //GET Hometimeline Request to akka server
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/hometimeline" =>
@@ -130,7 +130,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
 
     //Response from akka server for Hometimeline
     case LoadHomeTimelineResp(requestUUID: String, tweets: Map[String, String]) =>
-      requestMap.remove(requestUUID).get ! HttpResponse(entity = """{ received : """ + tweets + """}""", headers = List(`Content-Type`(`application/json`)))
+      requestMap.remove(requestUUID).get ! HttpResponse(entity = HttpEntity(`application/json`, """{ received : """ + tweets + """}"""))
 
     /*
       //TIMELINE SERVICES
