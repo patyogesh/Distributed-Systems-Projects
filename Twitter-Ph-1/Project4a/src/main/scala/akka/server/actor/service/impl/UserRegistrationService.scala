@@ -67,7 +67,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       }
       val factory = context.actorSelection(clientFactoryPath)
       factory ! Start*/
-
+      println("Received")
       val taskCount = userProfileCreatorRouter.routees.length
       val taskSize: Int = Math.ceil(clients / taskCount).toInt
       jobMap += jobID -> new Job(jobID, taskCount, taskSize, clientFactoryPath)
@@ -86,6 +86,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
         usersRegistered += 1
       }
     case TaskComplete(jobID) =>
+      println("Complete")
       val job: Job = jobMap.get(jobID).get
       job.remainingJobs -= 1
       usersRegistered += job.jobSize

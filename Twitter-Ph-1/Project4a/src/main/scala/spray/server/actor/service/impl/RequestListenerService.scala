@@ -36,7 +36,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
 
     //USER REGISTRATION
     //Register multiple users to akka server
-    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/userregistraton" =>
+    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/userregistration" =>
       val payloadMap = entity.asString.asJson.convertTo[scala.collection.immutable.Map[String, String]]
       val ip = payloadMap.get("ip").get
       val clients = payloadMap.get("clients").get.toInt
@@ -58,6 +58,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       //send request to akka server
       val akkaServer = context.actorSelection(akkaServerPath + "UserRegistrationRouter")
       akkaServer ! RegisterUsers(uuid, ip, clients, selfPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
+      println("Sent")
 
     case RegistrationComplete(uuid: String) =>
       println("Registration complete")
