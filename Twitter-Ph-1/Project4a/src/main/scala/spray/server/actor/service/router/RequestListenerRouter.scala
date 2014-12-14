@@ -46,6 +46,6 @@ class RequestListenerRouter(count: Int, name: String, localAddress: String, loca
       context watch r
       router = router.addRoutee(r)
     case a =>
-      println("Unknown " + a.toString)
+      println("Unknown Message in Spray router : " + a.toString)
   }
 }

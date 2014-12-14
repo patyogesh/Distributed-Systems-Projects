@@ -48,7 +48,7 @@ object Main {
     // the handler actor replies to incoming HttpRequests
     var handler: ActorRef = null
     //handler = system.actorOf(Props(new RequestListenerService("RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListener")
-    handler = system.actorOf(Props(new RequestListenerRouter(2 * cores, "RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListener")
+    handler = system.actorOf(Props(new RequestListenerRouter(2 * cores, "RequestListenerRouter", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListenerRouter")
     IO(Http) ! Http.Bind(handler, interface = localAddress, port = constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES)
   }
 }
