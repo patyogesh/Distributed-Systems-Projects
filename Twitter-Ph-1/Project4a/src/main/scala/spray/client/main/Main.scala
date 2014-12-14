@@ -89,7 +89,7 @@ object Main {
 
     implicit val system = ActorSystem()
     import system.dispatcher
-    implicit val timeout: Timeout = 10.seconds
+    implicit val timeout: Timeout = 20.seconds
     println("sending registration request : " + serverAddress)
     for {
       response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/userregistration"), entity = """{ "ip" : """" + serverAddress.split(":")(0) + """" , "clients" : """" + clients + """" , "sampleSize" : """" + sampleSize + """" , "peakActorName" : """" + peakActorName + """" , "peakActorFollowersCount" : """" + peakActorFollowersCount + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]

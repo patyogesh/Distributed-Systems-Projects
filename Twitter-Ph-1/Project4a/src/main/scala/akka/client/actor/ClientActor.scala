@@ -51,7 +51,7 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
     case LoadUserTimelineResp(uuid: String, tweets: Map[String, String]) =>
     //Trash Received tweets from server
     case _ =>
-      println("Unknown Message received at client")
+      println("Unknown Message received at akka client actor")
   }
 
   //Generate random String for tweet text
