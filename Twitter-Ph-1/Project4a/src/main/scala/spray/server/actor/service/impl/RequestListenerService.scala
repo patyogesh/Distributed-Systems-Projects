@@ -59,9 +59,6 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       val akkaServer = context.actorSelection(akkaServerPath + "TweetsServiceRouter")
       //akkaServer ! RegisterUsers(ip: String, clients: Int, clientFactoryPath: String, followers: Array[Int], sampleSize: Int, peakActorName: String, peakActorFollowersCount: Int)
       
-      
-      
-      
     //TWEET SERVICES
     //POST Update
     case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/tweet/update" =>

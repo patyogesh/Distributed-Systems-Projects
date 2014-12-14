@@ -48,7 +48,7 @@ object Main {
 
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    val serverAddress: String = hostAddress + ":" + constants.SPRAY_CLIENT_PORT_FOR_HTTP_MESSAGES
+    val serverAddress: String = hostAddress + ":" + constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES 
 
     //Scale time
     val offset = (24 * 3600) / (clients * timeMultiplier)
@@ -90,6 +90,7 @@ object Main {
     implicit val system = ActorSystem()
     import system.dispatcher
     implicit val timeout: Timeout = 5.seconds
+    println("sending registration request : " + serverAddress)
     for {
       response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/userregistration"), entity = """{ "ip" : """" + serverAddress.split(":")(0) + """" , "clients" : """" + clients + """" , "sampleSize" : """" + sampleSize + """" , "peakActorFollowersCount" : """" + peakActorFollowersCount + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]
       _ <- IO(Http) ? Http.CloseAll
