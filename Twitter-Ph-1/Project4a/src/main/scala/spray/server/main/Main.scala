@@ -12,10 +12,10 @@ import akka.actor.ActorSystem
 import akka.actor.Props
 import akka.actor.actorRef2Scala
 import akka.io.IO
-import main.scala.common.Constants
-import main.scala.spray.server.actor.service.impl.RequestListenerService
-import spray.can.Http
 import akka.util.Timeout
+import main.scala.common.Constants
+import main.scala.spray.server.actor.service.router.RequestListenerRouter
+import spray.can.Http
 
 object Main {
 
@@ -43,12 +43,12 @@ object Main {
 
     val configuration = ConfigFactory.parseString(configString)
     implicit val system = ActorSystem("SprayServer", ConfigFactory.load(configuration))
-    implicit val timeout: Timeout = constants.TIMEOUT 
+    implicit val timeout: Timeout = constants.TIMEOUT
 
     // the handler actor replies to incoming HttpRequests
     var handler: ActorRef = null
-    handler = system.actorOf(Props(new RequestListenerService("RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListener")
+    //handler = system.actorOf(Props(new RequestListenerService("RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListener")
+    handler = system.actorOf(Props(new RequestListenerRouter(2 * cores, "RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListener")
     IO(Http) ! Http.Bind(handler, interface = localAddress, port = constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES)
-
   }
 }
