@@ -15,6 +15,7 @@ import akka.io.IO
 import main.scala.common.Constants
 import main.scala.spray.server.actor.service.impl.RequestListenerService
 import spray.can.Http
+import akka.util.Timeout
 
 object Main {
 
@@ -42,6 +43,7 @@ object Main {
 
     val configuration = ConfigFactory.parseString(configString)
     implicit val system = ActorSystem("SprayServer", ConfigFactory.load(configuration))
+    implicit val timeout: Timeout = constants.TIMEOUT 
 
     // the handler actor replies to incoming HttpRequests
     var handler: ActorRef = null

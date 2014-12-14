@@ -19,11 +19,11 @@ import spray.http.HttpHeaders._
 import spray.http.ContentTypes._
 import scala.concurrent.duration.DurationDouble
 
-class SprayClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Double, name: String, totalClients: Int, timeMultiplier: Double) extends Actor {
+class SprayClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Double, name: String, totalClients: Int, timeMultiplier: Double, sprayRequestTimeout: Timeout)(implicit system: ActorSystem) extends Actor {
 
   import context.dispatcher
-  implicit val system = ActorSystem()
-  private implicit val timeout: Timeout = 5.seconds
+  
+  implicit val timeout: Timeout = sprayRequestTimeout
 
   def receive = {
     case Start =>

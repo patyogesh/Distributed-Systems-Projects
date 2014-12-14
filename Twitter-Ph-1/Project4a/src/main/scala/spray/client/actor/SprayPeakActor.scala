@@ -22,11 +22,10 @@ import spray.http.HttpHeaders._
 import spray.http.ContentTypes._
 
 //#This actor simulates a sudden peak load on server by having a large number of followers and tweeting.
-class SprayPeakActor(startTime: Int, interval: Int, serverAddress: String, name: String) extends Actor {
+class SprayPeakActor(startTime: Int, interval: Int, serverAddress: String, name: String, sprayRequestTimeout: Timeout)(implicit system: ActorSystem) extends Actor {
 
   import context.dispatcher
-  implicit val system = ActorSystem()
-  private implicit val timeout: Timeout = 5.seconds
+  implicit val timeout: Timeout = sprayRequestTimeout
 
   def receive = {
     case Start =>

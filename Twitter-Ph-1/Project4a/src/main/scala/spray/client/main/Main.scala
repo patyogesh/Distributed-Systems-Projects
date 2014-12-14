@@ -22,6 +22,7 @@ import spray.http.HttpHeaders._
 import spray.http.HttpMethods._
 import spray.httpx.RequestBuilding._
 import akka.dispatch.ExecutionContexts
+import akka.util.Timeout
 
 object Main {
 
@@ -48,6 +49,7 @@ object Main {
 
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
+    val sprayRequestTimeout: Timeout = constants.TIMEOUT
     val serverAddress: String = hostAddress + ":" + constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES
 
     //Scale time
@@ -67,7 +69,7 @@ object Main {
 }"""
 
     val configuration = ConfigFactory.parseString(configString)
-    val akkaSystem = ActorSystem("SprayClient", ConfigFactory.load(configuration))
+    implicit val system = ActorSystem("SprayClient", ConfigFactory.load(configuration))
 
     //Peak Load arguments. Optional.
     var peakActor: ActorRef = null
@@ -79,18 +81,18 @@ object Main {
       peakActorFollowersCount = args(6).toInt
       //val selfPath = "akka.tcp://Project4aClient@" + localAddress + ":" + constants.AKKA_CLIENT_PORT + "/user/PeakActor"
       peakActorName = "PeakActor"
-      peakActor = akkaSystem.actorOf(Props(new SprayPeakActor(startTime, interval, serverAddress, "PeakActor@" + localAddress)), peakActorName)
+      peakActor = system.actorOf(Props(new SprayPeakActor(startTime, interval, serverAddress, "PeakActor@" + localAddress, constants.TIMEOUT)), peakActorName)
     } catch {
       case ex: java.lang.ArrayIndexOutOfBoundsException => //Optional arguments for peak load. 
     }
 
     //#This class instantiates the user actors on client side and starts them when registration on server side is complete.
-    val clientActorFactory = akkaSystem.actorOf(Props(new SprayClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier, peakActor)), "ClientActorFactory")
+    val clientActorFactory = system.actorOf(Props(new SprayClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier, peakActor, sprayRequestTimeout)), "ClientActorFactory")
 
-    implicit val system = ActorSystem()
     import system.dispatcher
-    implicit val timeout: Timeout = 20.seconds
+    implicit val timeout: Timeout = constants.TIMEOUT
     
+    println("Registering Clients on server")
     for {
       response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/userregistration"), entity = HttpEntity(`application/json`, """{ "ip" : """" + localAddress.split(":")(0) + """" , "clients" : """" + clients + """" , "sampleSize" : """" + sampleSize + """" , "peakActorName" : """" + peakActorName + """" , "peakActorFollowersCount" : """" + peakActorFollowersCount + """"}"""))).mapTo[HttpResponse]
       _ <- IO(Http) ? Http.CloseAll

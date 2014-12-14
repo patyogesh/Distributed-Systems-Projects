@@ -1,5 +1,8 @@
 package main.scala.common
 
+import akka.util.Timeout
+import scala.concurrent.duration._
+
 //#Contains various constants used in the project.  
 class Constants {
   val AKKA_SERVER_PORT: Int = 7171
@@ -11,4 +14,7 @@ class Constants {
   val UPDATE_TIMEOUT: Int = 2000
 
   val followers = Array(8, 7, 7, 5, 5, 3, 3, 1, 1, 1)
+  
+  //Spray Timeout
+  val TIMEOUT: Timeout = 10.seconds 
 }
