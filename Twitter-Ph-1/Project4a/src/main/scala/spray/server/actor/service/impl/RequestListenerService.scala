@@ -2,7 +2,7 @@ package main.scala.spray.server.actor.service.impl
 
 import akka.actor.Actor
 import spray.can.Http
-import spray.util._
+//import spray.util._
 import spray.http._
 import HttpMethods._
 import main.scala.common._
@@ -36,16 +36,16 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
 
     //USER REGISTRATION
     //Register multiple users to akka server
-    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/registraton/registerusers" =>
+    case HttpRequest(POST, Uri.Path(path), header, entity, protocol) if path startsWith "/userregistraton" =>
       val payloadMap = entity.asString.asJson.convertTo[scala.collection.immutable.Map[String, String]]
       val ip = payloadMap.get("ip").get
       val clients = payloadMap.get("clients").get.toInt
-      val clientFactoryPath = payloadMap.get("clientFactoryPath").get
+      //val clientFactoryPath = payloadMap.get("clientFactoryPath").get
       val sampleSize = payloadMap.get("sampleSize").get.toInt
       val peakActorName = payloadMap.get("peakActorName").get
       val peakActorFollowersCount = payloadMap.get("peakActorFollowersCount").get.toInt
       //val followers: Array[Int] = payloadMap.get("followers").get.toA
-      
+      println("GOT IT!")
       var done = false
       var uuid: String = ""
       while (!done) {

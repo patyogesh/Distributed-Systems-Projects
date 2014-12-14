@@ -13,6 +13,7 @@ class ClientActorFactory(clients: Int, serverAddress: String, followers: Array[I
   for (i <- 0 to clients - 1) {
     clientActors += context.system.actorOf(Props(new ClientActor(serverAddress, followers((i % sampleSize)), numberOfTweetsPerDay((i % sampleSize)), i * offset, "Client" + i + "@" + localAddress, clients, timeMultiplier)), "Client" + i + "@" + localAddress)
   }
+  
   def receive = {
     case Start =>
       println("Registration of clinets on server successful. Starting Load on server.")

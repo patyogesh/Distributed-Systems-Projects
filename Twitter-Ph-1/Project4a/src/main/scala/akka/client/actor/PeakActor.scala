@@ -20,8 +20,19 @@ class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: 
       val server = context.actorSelection(servicePath)
       println("creating spike load.")
       val uuid = java.util.UUID.randomUUID().toString()
-      server ! new AkkaRequest(uuid, selfPath + name, "PostUpdate", name, "", "blah!")
+      server ! new AkkaRequest(uuid, selfPath + name, "PostUpdate", name, "", getRandomText)
     case _ =>
       println("Unknown message received in Peak actor")
+  }
+  
+  //Generate random String for tweet text
+  def getRandomText(): String = {
+    val random = new scala.util.Random
+    val length: Int = random.nextInt(120) + 20 //min 20 chars, max 140 chars
+    val sb = new StringBuilder
+    for (i <- 1 to length) {
+      sb.append(random.nextPrintableChar)
+    }
+    sb.toString
   }
 }

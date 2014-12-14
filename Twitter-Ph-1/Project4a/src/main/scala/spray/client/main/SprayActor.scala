@@ -19,7 +19,7 @@ class SprayActor extends Actor {
   implicit val system: ActorSystem = ActorSystem()
   import system.dispatcher // execution context for future transformation below
   for {
-    response <- IO(Http).ask(HttpRequest(POST, Uri("http://$host/ping"))).mapTo[HttpResponse]
+    response <- IO(Http).ask(HttpRequest(POST, Uri(s"http://$host/ping"))).mapTo[HttpResponse]
     _ <- IO(Http) ? Http.CloseAll
   } yield {
     system.log.info("Request-Level API: received {} response with {} bytes",
