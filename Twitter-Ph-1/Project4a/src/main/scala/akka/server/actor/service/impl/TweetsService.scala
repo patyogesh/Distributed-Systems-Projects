@@ -71,7 +71,6 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
 
   def postUpdate(requestUUID: String, requestActorPath: String, userName: String, tweetuuid: String, tweetText: String) = {
     try {
-      println("Tweet")
       //Push to tweet map
       var done = false
       var uuid: String = ""
@@ -95,7 +94,6 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
       //Send Response      
       val ref = context.actorSelection(requestActorPath)
       ref ! PostUpdateResponse(requestUUID)
-      println("Done")
     } catch {
       case e: java.util.NoSuchElementException => //Ignore for Unregistered User println("Username : " + userName)
     }
