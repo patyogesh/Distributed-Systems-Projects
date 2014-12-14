@@ -71,7 +71,6 @@ class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProf
 
   def postUpdate(uuid: String, requestActorPath: String, userName: String, tweetuuid: String, tweetText: String) = {
     try {
-      println("Tweet")
       //Push to tweet map
       var done = false
       var uuid: String = ""

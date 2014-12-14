@@ -35,7 +35,6 @@ class SprayClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int,
       val userTimeline = context.system.scheduler.schedule((offset / 1) * 1000 milliseconds, userTimelineTimeout * 1000 milliseconds, self, LoadUserTimelineReq)
 
     case TweetToServer =>
-      println("Tweeting " + name)
       val uuid = java.util.UUID.randomUUID().toString()
       import system.dispatcher // execution context for future transformation below
       for {
