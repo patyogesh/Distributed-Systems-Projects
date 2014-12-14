@@ -110,6 +110,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
     //Response from akka server for Usertimeline
     case LoadUserTimelineResp(requestUUID: String, tweets: Map[String, String]) =>
       println("Result Length : " + tweets.size)
+      //requestMap.remove(requestUUID).get ! HttpResponse(entity = """{ received : """ + tweets + """}""", headers = List(`Content-Type`(`application/json`)))
 
     //GET Hometimeline Request to akka server
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/hometimeline" =>
@@ -133,7 +134,8 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
     //Response from akka server for Hometimeline
     case LoadHomeTimelineResp(requestUUID: String, tweets: Map[String, String]) =>
       println("Result Length : " + tweets.size)
-
+      //requestMap.remove(requestUUID).get ! HttpResponse(entity = """{ received : """ + tweets + """}""", headers = List(`Content-Type`(`application/json`)))
+      
     /*
       //TIMELINE SERVICES
     //GET Usertimeline Request to akka server
