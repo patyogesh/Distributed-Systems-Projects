@@ -1,14 +1,13 @@
 package main.scala.akka.client.main
 
+import com.typesafe.config.ConfigFactory
+import akka.actor.ActorRef
+import akka.actor.ActorSelection.toScala
 import akka.actor.ActorSystem
 import akka.actor.Props
-import main.scala.akka.client.actor.ClientActor
-import akka.actor.ActorRef
-import com.typesafe.config.ConfigFactory
+import main.scala.akka.client.actor.ClientActorFactory
+import main.scala.akka.client.actor.PeakActor
 import main.scala.common.Constants
-import main.scala.common.ServiceRequest
-import main.scala.akka.client.actor._
-import main.scala.common.RegisterUsers
 import main.scala.common.RegisterUsers
 
 //#Client Main class to put load on Tweeter server for the project
@@ -54,7 +53,7 @@ object Main {
     }
  }
 }"""
-      
+
     val configuration = ConfigFactory.parseString(configString)
     val system = ActorSystem("Project4aClient", ConfigFactory.load(configuration))
 

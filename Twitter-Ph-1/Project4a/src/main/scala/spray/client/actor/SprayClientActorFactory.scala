@@ -1,11 +1,12 @@
 package main.scala.spray.client.actor
 
 import scala.collection.mutable.ListBuffer
-import akka.actor.ActorRef
-import main.scala.common.Start
+
 import akka.actor.Actor
-import akka.actor.actorRef2Scala
+import akka.actor.ActorRef
 import akka.actor.Props
+import akka.actor.actorRef2Scala
+import main.scala.common.Start
 
 class SprayClientActorFactory(clients: Int, serverAddress: String, followers: Array[Int], sampleSize: Int, numberOfTweetsPerDay: Array[Int], offset: Double, localAddress: String, timeMultiplier: Double, peakActor: ActorRef) extends Actor {
 

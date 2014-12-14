@@ -1,22 +1,17 @@
 package main.scala.akka.client.actor
 
+import scala.collection.mutable.Map
+import scala.concurrent.duration.DurationDouble
 import akka.actor.Actor
-import akka.actor.ActorSelection
-import scala.concurrent.duration._
-import java.util.concurrent.TimeUnit
-import main.scala.common.ServiceRequest
-import main.scala.common.Constants
-import main.scala.common.TweetToServer
+import akka.actor.ActorSelection.toScala
 import main.scala.common.AkkaRequest
-import main.scala.common.LoadHomeTimeline
+import main.scala.common.Constants
 import main.scala.common.LoadHomeTimelineReq
 import main.scala.common.LoadHomeTimelineResp
-import main.scala.common.LoadUserTimelineResp
 import main.scala.common.LoadUserTimelineReq
-import main.scala.common.Tweet
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.Map
+import main.scala.common.LoadUserTimelineResp
 import main.scala.common.Start
+import main.scala.common.TweetToServer
 
 //#This class simulates normal user of tweeter through an actor. 
 class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offset: Double, name: String, totalClients: Int, timeMultiplier: Double) extends Actor {
@@ -46,14 +41,14 @@ class ClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int, offs
       val server = context.actorSelection(servicePath)
       val uuid = java.util.UUID.randomUUID().toString()
       server ! new AkkaRequest(uuid, selfPath + name, "GetHomeTimeline", name, "", "")
-    case LoadHomeTimelineResp(tweets: Map[String, String]) =>
+    case LoadHomeTimelineResp(uuid: String, tweets: Map[String, String]) =>
     //Trash Received tweets from server 
     case LoadUserTimelineReq =>
       val servicePath = serverAddress + "/TimelineServiceRouter"
       val server = context.actorSelection(servicePath)
       val uuid = java.util.UUID.randomUUID().toString()
       server ! new AkkaRequest(uuid, selfPath + name, "GetUserTimeline", name, "", "")
-    case LoadUserTimelineResp(tweets: Map[String, String]) =>
+    case LoadUserTimelineResp(uuid: String, tweets: Map[String, String]) =>
     //Trash Received tweets from server
     case _ =>
       println("Unknown Message received at client")

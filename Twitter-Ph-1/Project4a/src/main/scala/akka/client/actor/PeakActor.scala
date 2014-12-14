@@ -1,11 +1,11 @@
 package main.scala.akka.client.actor
 
+import scala.concurrent.duration.DurationInt
 import akka.actor.Actor
-import main.scala.common.TweetToServer
-import scala.concurrent.duration._
-import java.util.concurrent.TimeUnit
+import akka.actor.ActorSelection.toScala
 import main.scala.common.AkkaRequest
 import main.scala.common.Start
+import main.scala.common.TweetToServer
 
 //#This actor simulates a sudden peak load on server by having a large number of followers and tweeting.
 class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: String, name: String) extends Actor {
@@ -24,7 +24,7 @@ class PeakActor(startTime: Int, interval: Int, serverAddress: String, selfPath: 
     case _ =>
       println("Unknown message received in Peak actor")
   }
-  
+
   //Generate random String for tweet text
   def getRandomText(): String = {
     val random = new scala.util.Random

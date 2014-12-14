@@ -1,22 +1,19 @@
 package main.scala.akka.server.main
 
-import akka.actor.ActorSystem
-import akka.actor.ActorRef
-import akka.actor.Props
-import akka.routing.SmallestMailboxRouter
-import main.scala.akka.server.actor.service.impl._
+import java.util.concurrent.ConcurrentHashMap
+import scala.collection.concurrent
+import scala.collection.convert.decorateAsScala.mapAsScalaConcurrentMapConverter
 import com.typesafe.config.ConfigFactory
-import main.scala.common.Constants
-import main.scala.common.UserProfile
-import main.scala.common.Tweet
-import main.scala.akka.server.actor.service.router.UserRegistrationRouter
+import akka.actor.ActorRef
+import akka.actor.ActorSystem
+import akka.actor.Props
+import main.scala.akka.server.actor.service.impl.LoadMonitor
 import main.scala.akka.server.actor.service.router.TimelineServiceRouter
 import main.scala.akka.server.actor.service.router.TweetsServiceRouter
-import java.util.concurrent.ConcurrentHashMap
-import scala.collection._
-import scala.collection.convert.decorateAsScala._
-
-
+import main.scala.akka.server.actor.service.router.UserRegistrationRouter
+import main.scala.common.Constants
+import main.scala.common.Tweet
+import main.scala.common.UserProfile
 
 //#This class is the main class to launch the tweeter server for this project. 
 object Main {

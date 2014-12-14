@@ -1,10 +1,11 @@
 package main.scala.akka.server.actor.service.impl
 
-import akka.actor.Actor
 import scala.collection.mutable.ListBuffer
-import main.scala.common.UserProfile
+import akka.actor.Actor
+import akka.actor.ActorSelection.toScala
 import main.scala.common.CreateUserProfiles
 import main.scala.common.TaskComplete
+import main.scala.common.UserProfile
 
 //#Helps registering users on server faster by dividing task among actors
 class UserAccountCreatorActor extends Actor {
@@ -20,7 +21,7 @@ class UserAccountCreatorActor extends Actor {
           followerList += "Client" + k + "@" + ip
         }
       }
-      
+
       val sender = context.actorSelection(senderPath)
       sender ! TaskComplete(jobId)
     case _ =>

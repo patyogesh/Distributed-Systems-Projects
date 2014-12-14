@@ -1,12 +1,11 @@
 package main.scala.common
 
-import akka.actor.ActorRef
 import scala.collection.mutable.Map
-import scala.collection.mutable.ListBuffer
+
+import akka.actor.ActorRef
 
 //#All messsages sent in the project
 sealed trait Messages
-
 
 //#Request message to Akka server
 case class AkkaRequest(requestUUID: String, requestActorPath: String, endPoint: String, userName: String, tweetuuid: String, tweetText: String) extends Messages
@@ -59,8 +58,8 @@ case class TaskComplete(jobID: Int) extends Messages
 case class TweetToServer() extends Messages
 case class LoadHomeTimeline() extends Messages
 case class LoadHomeTimelineReq() extends Messages
-case class LoadHomeTimelineResp(tweets: Map[String, String]) extends Messages
+case class LoadHomeTimelineResp(requestUUID: String, tweets: Map[String, String]) extends Messages
 case class LoadUserTimelineReq() extends Messages
-case class LoadUserTimelineResp(tweets: Map[String, String]) extends Messages
+case class LoadUserTimelineResp(requestUUID: String, tweets: Map[String, String]) extends Messages
 
 case class Start(uuid: String) extends Messages

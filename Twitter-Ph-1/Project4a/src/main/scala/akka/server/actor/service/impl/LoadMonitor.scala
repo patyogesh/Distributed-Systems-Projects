@@ -1,13 +1,11 @@
 package main.scala.akka.server.actor.service.impl
 
+import scala.concurrent.duration.DurationInt
 import akka.actor.Actor
-import scala.concurrent.duration._
-import java.util.concurrent.TimeUnit
-import akka.actor.ActorRef
 import main.scala.common.PrintLoad
-import main.scala.common.UserCount
-import main.scala.common.RegisterTweetLoad
 import main.scala.common.RegisterTimelineLoad
+import main.scala.common.RegisterTweetLoad
+import main.scala.common.UserCount
 
 //#This is the load monitor of tweeter server and measures all load on server.
 class LoadMonitor(updateTimeout: Int) extends Actor {

@@ -1,21 +1,17 @@
 package main.scala.akka.server.actor.service.impl
 
+import scala.collection.mutable.Map
+import scala.concurrent.duration.DurationInt
 import akka.actor.Actor
-import akka.actor.actorRef2Scala
 import akka.actor.ActorRef
-import scala.concurrent.duration._
-import java.util.concurrent.TimeUnit
-import main.scala.common.ServiceRequest
-import main.scala.common.Tweet
-import main.scala.common.UserProfile
-import java.lang.Class
+import akka.actor.ActorSelection.toScala
+import akka.actor.actorRef2Scala
 import main.scala.common.AkkaRequest
 import main.scala.common.InformLoad
-import scala.collection.mutable.ListBuffer
-import main.scala.common.RegisterTweetLoad
-import scala.collection.mutable.Map
 import main.scala.common.PostUpdateResponse
-
+import main.scala.common.RegisterTweetLoad
+import main.scala.common.Tweet
+import main.scala.common.UserProfile
 
 //#This services any tweet request coming form user.
 class TweetsService(loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {

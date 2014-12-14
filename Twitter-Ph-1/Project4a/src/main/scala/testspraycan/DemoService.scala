@@ -50,17 +50,17 @@ class DemoService extends Actor with ActorLogging {
       sender ! Http.Close
       context.system.scheduler.scheduleOnce(1.second) { context.system.shutdown() }
 
-    case r@HttpRequest(POST, Uri.Path("/file-upload"), headers, entity: HttpEntity.NonEmpty, protocol) =>
-      // emulate chunked behavior for POST requests to this path
-//      val parts = r.asPartStream()
-//      val client = sender
-//      val handler = context.actorOf(Props(new FileUploadHandler(client, parts.head.asInstanceOf[ChunkedRequestStart])))
-//      parts.tail.foreach(handler !)
+    case r @ HttpRequest(POST, Uri.Path("/file-upload"), headers, entity: HttpEntity.NonEmpty, protocol) =>
+    // emulate chunked behavior for POST requests to this path
+    //      val parts = r.asPartStream()
+    //      val client = sender
+    //      val handler = context.actorOf(Props(new FileUploadHandler(client, parts.head.asInstanceOf[ChunkedRequestStart])))
+    //      parts.tail.foreach(handler !)
 
-    case s@ChunkedRequestStart(HttpRequest(POST, Uri.Path("/file-upload"), _, _, _)) =>
-//      val client = sender
-//      val handler = context.actorOf(Props(new FileUploadHandler(client, s)))
-//      sender ! RegisterChunkHandler(handler)
+    case s @ ChunkedRequestStart(HttpRequest(POST, Uri.Path("/file-upload"), _, _, _)) =>
+    //      val client = sender
+    //      val handler = context.actorOf(Props(new FileUploadHandler(client, s)))
+    //      sender ! RegisterChunkHandler(handler)
 
     case _: HttpRequest => sender ! HttpResponse(status = 404, entity = "Unknown resource!")
 
@@ -70,8 +70,7 @@ class DemoService extends Actor with ActorLogging {
     case Timedout(HttpRequest(method, uri, _, _, _)) =>
       sender ! HttpResponse(
         status = 500,
-        entity = "The " + method + " request to '" + uri + "' has timed out..."
-      )
+        entity = "The " + method + " request to '" + uri + "' has timed out...")
   }
 
   ////////////// helpers //////////////
@@ -92,15 +91,13 @@ class DemoService extends Actor with ActorLogging {
             <li><a href="/stop">/stop</a></li>
           </ul>
           <p>Test file upload</p>
-          <form action ="/file-upload" enctype="multipart/form-data" method="post">
+          <form action="/file-upload" enctype="multipart/form-data" method="post">
             <input type="file" name="datafile" multiple=""></input>
             <br/>
             <input type="submit">Submit</input>
           </form>
         </body>
-      </html>.toString()
-    )
-  )
+      </html>.toString()))
 
   def statsPresentation(s: Stats) = HttpResponse(
     entity = HttpEntity(`text/html`,
@@ -108,19 +105,17 @@ class DemoService extends Actor with ActorLogging {
         <body>
           <h1>HttpServer Stats</h1>
           <table>
-            <tr><td>uptime:</td><td>{s.uptime.formatHMS}</td></tr>
-            <tr><td>totalRequests:</td><td>{s.totalRequests}</td></tr>
-            <tr><td>openRequests:</td><td>{s.openRequests}</td></tr>
-            <tr><td>maxOpenRequests:</td><td>{s.maxOpenRequests}</td></tr>
-            <tr><td>totalConnections:</td><td>{s.totalConnections}</td></tr>
-            <tr><td>openConnections:</td><td>{s.openConnections}</td></tr>
-            <tr><td>maxOpenConnections:</td><td>{s.maxOpenConnections}</td></tr>
-            <tr><td>requestTimeouts:</td><td>{s.requestTimeouts}</td></tr>
+            <tr><td>uptime:</td><td>{ s.uptime.formatHMS }</td></tr>
+            <tr><td>totalRequests:</td><td>{ s.totalRequests }</td></tr>
+            <tr><td>openRequests:</td><td>{ s.openRequests }</td></tr>
+            <tr><td>maxOpenRequests:</td><td>{ s.maxOpenRequests }</td></tr>
+            <tr><td>totalConnections:</td><td>{ s.totalConnections }</td></tr>
+            <tr><td>openConnections:</td><td>{ s.openConnections }</td></tr>
+            <tr><td>maxOpenConnections:</td><td>{ s.maxOpenConnections }</td></tr>
+            <tr><td>requestTimeouts:</td><td>{ s.requestTimeouts }</td></tr>
           </table>
         </body>
-      </html>.toString()
-    )
-  )
+      </html>.toString()))
 
   class Streamer(client: ActorRef, count: Int) extends Actor with ActorLogging {
     log.debug("Starting streaming response ...")

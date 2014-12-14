@@ -1,17 +1,20 @@
 package main.scala.spray.server.main
 
-import akka.actor.ActorSystem
-import akka.io.IO
-import spray.can.Http
-import akka.actor.actorRef2Scala
-import akka.actor.Props
-import main.scala.spray.server.actor.service.impl.RequestListenerService
-import main.scala.common.Constants
-import akka.actor.ActorRef
 import java.util.concurrent.ConcurrentHashMap
-import scala.collection._
-import scala.collection.convert.decorateAsScala._
+
+import scala.collection.concurrent
+import scala.collection.convert.decorateAsScala.mapAsScalaConcurrentMapConverter
+
 import com.typesafe.config.ConfigFactory
+
+import akka.actor.ActorRef
+import akka.actor.ActorSystem
+import akka.actor.Props
+import akka.actor.actorRef2Scala
+import akka.io.IO
+import main.scala.common.Constants
+import main.scala.spray.server.actor.service.impl.RequestListenerService
+import spray.can.Http
 
 object Main {
 
@@ -19,7 +22,7 @@ object Main {
     val akkaServerIP = args(0)
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    
+
     val cores: Int = Runtime.getRuntime().availableProcessors();
 
     val requestMap: concurrent.Map[String, ActorRef] = new ConcurrentHashMap().asScala
@@ -32,18 +35,18 @@ object Main {
     enabled-transports = ["akka.remote.netty.tcp"]
     netty.tcp {
       hostname = """ + localAddress + """
-      port = """ + constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES  + """
+      port = """ + constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES + """
     }
  }
 }"""
-      
+
     val configuration = ConfigFactory.parseString(configString)
     implicit val system = ActorSystem("SprayServer", ConfigFactory.load(configuration))
 
     // the handler actor replies to incoming HttpRequests
     var handler: ActorRef = null
-    handler = system.actorOf(Props(new RequestListenerService("RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES , akkaServerIP, constants.AKKA_SERVER_PORT , constants.followers, requestMap)), name = "RequestListener")
-    IO(Http) ! Http.Bind(handler, interface = localAddress, port = constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES )
-    
+    handler = system.actorOf(Props(new RequestListenerService("RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListener")
+    IO(Http) ! Http.Bind(handler, interface = localAddress, port = constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES)
+
   }
 }

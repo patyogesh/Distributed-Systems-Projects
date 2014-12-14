@@ -48,7 +48,7 @@ object Main {
 
     val localAddress: String = java.net.InetAddress.getLocalHost.getHostAddress()
     val constants = new Constants()
-    val serverAddress: String = hostAddress + ":" + constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES 
+    val serverAddress: String = hostAddress + ":" + constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES
 
     //Scale time
     val offset = (24 * 3600) / (clients * timeMultiplier)
@@ -96,6 +96,7 @@ object Main {
       _ <- IO(Http) ? Http.CloseAll
     } yield {
       println("Done on server")
+      //if (response.status.toString.equalsIgnoreCase("200"))
       clientActorFactory ! Start
     }
 

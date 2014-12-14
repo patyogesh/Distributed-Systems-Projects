@@ -1,18 +1,16 @@
 package main.scala.akka.server.actor.service.router
 
 import akka.actor.Actor
-import akka.actor.Terminated
-import akka.actor.Props
-import main.scala.akka.server.actor.service.impl.TweetsService
-import akka.routing.Router
-import akka.routing.RoundRobinRoutingLogic
-import akka.routing.ActorRefRoutee
-import akka.routing.Broadcast
 import akka.actor.ActorRef
-import main.scala.common.ServiceRequest
-import main.scala.common.UserProfile
-import main.scala.common.Tweet
+import akka.actor.Props
+import akka.actor.Terminated
+import akka.routing.ActorRefRoutee
+import akka.routing.RoundRobinRoutingLogic
+import akka.routing.Router
+import main.scala.akka.server.actor.service.impl.TweetsService
 import main.scala.common.AkkaRequest
+import main.scala.common.Tweet
+import main.scala.common.UserProfile
 
 //#Receives Tweet request from users and routes the request to a service actor instance for processing request.
 //#This also acts as the interface to the users on the server side for sending request to for processing. 

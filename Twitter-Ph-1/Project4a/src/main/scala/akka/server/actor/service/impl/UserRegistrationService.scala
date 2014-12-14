@@ -1,27 +1,18 @@
 package main.scala.akka.server.actor.service.impl
 
-import akka.actor.Actor
-import main.scala.common.Tweet
-import main.scala.common.UserProfile
-import akka.actor.ActorRef
-import main.scala.common.ServiceRequest
-import main.scala.common.UserProfile
-import scala.concurrent.duration._
-import java.util.concurrent.TimeUnit
-import main.scala.common.UpdateRegisteredUserCount
-import main.scala.common.RegisterUser
-import main.scala.common.UserCount
-import main.scala.common.RegisterUsers
 import scala.collection.mutable.ListBuffer
-import main.scala.common.Start
 import scala.collection.mutable.Map
+import scala.concurrent.duration.DurationInt
+import akka.actor.Actor
+import akka.actor.ActorRef
+import akka.actor.ActorSelection.toScala
 import akka.actor.Props
+import akka.actor.Terminated
+import akka.actor.actorRef2Scala
 import akka.routing.ActorRefRoutee
 import akka.routing.RoundRobinRoutingLogic
 import akka.routing.Router
-import main.scala.common.CreateUserProfiles
-import main.scala.common.TaskComplete
-import akka.actor.Terminated
+import main.scala.common._
 
 //#This service registers users corresponding to a request from a client.
 class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap: Map[String, UserProfile], tweetsMap: Map[String, Tweet]) extends Actor {
@@ -67,7 +58,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       }
       val factory = context.actorSelection(clientFactoryPath)
       factory ! Start*/
-      println("Received")
+      println("Registration request on akka server")
       val taskCount = userProfileCreatorRouter.routees.length
       val taskSize: Int = Math.ceil(clients / taskCount).toInt
       jobMap += jobID -> new Job(jobID, requestUUID, taskCount, taskSize, clientFactoryPath)
@@ -93,6 +84,7 @@ class UserRegistrationService(count: Int, loadMonitor: ActorRef, userProfilesMap
       if (job.remainingJobs == 0) {
         val factory = context.actorSelection(job.clientFactoryPath)
         factory ! Start(job.requestUUID)
+        println("Registration complete on akka server")
       }
     case UpdateRegisteredUserCount =>
       loadMonitor ! UserCount(usersRegistered)
