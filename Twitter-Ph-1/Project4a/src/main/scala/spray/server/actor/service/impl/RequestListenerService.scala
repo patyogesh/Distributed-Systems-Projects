@@ -57,7 +57,6 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       akkaServer ! RegisterUsers(uuid, ip, clients, selfPath, followers, sampleSize, peakActorName, peakActorFollowersCount)
 
     case Start(requestUUID: String) =>
-      //requestMap.get(requestUUID).get ! Start
       requestMap.remove(requestUUID).get ! HttpResponse()
 
     //TWEET SERVICES
@@ -84,9 +83,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       
     //POST Update Response from akka server
     case PostUpdateResponse(requestUUID: String) =>
-      //val ref = requestMap.remove(uuid).get
-      requestMap.get(requestUUID).get ! HttpResponse()
-      requestMap.remove(requestUUID)
+      requestMap.remove(requestUUID).get ! HttpResponse()
       
     //TIMELINE SERVICES
     //GET Usertimeline Request to akka server
@@ -110,8 +107,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
 
     //Response from akka server for Usertimeline
     case LoadUserTimelineResp(requestUUID: String, tweets: Map[String, String]) =>
-      println("Result Length : " + tweets.size)
-      //requestMap.remove(requestUUID).get ! HttpResponse(entity = """{ received : """ + tweets + """}""", headers = List(`Content-Type`(`application/json`)))
+      requestMap.remove(requestUUID).get ! HttpResponse(entity = HttpEntity(`application/json`, """{ received : """ + tweets + """}"""))
 
     //GET Hometimeline Request to akka server
     case HttpRequest(GET, Uri.Path(path), header, entity, protocol) if path startsWith "/timeline/hometimeline" =>
@@ -134,8 +130,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
 
     //Response from akka server for Hometimeline
     case LoadHomeTimelineResp(requestUUID: String, tweets: Map[String, String]) =>
-      println("Result Length : " + tweets.size)
-      //requestMap.remove(requestUUID).get ! HttpResponse(entity = """{ received : """ + tweets + """}""", headers = List(`Content-Type`(`application/json`)))
+      requestMap.remove(requestUUID).get ! HttpResponse(entity = HttpEntity(`application/json`, """{ received : """ + tweets + """}"""))
       
     /*
       //TIMELINE SERVICES
