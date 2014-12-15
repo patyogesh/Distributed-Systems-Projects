@@ -35,14 +35,21 @@ object Main {
       hostname = """ + localAddress + """
       port = """ + constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES + """
     }
+      remote {
+    enabled-transports = ["akka.remote.netty.tcp"]
+    netty.tcp {
+      hostname = """ + localAddress + """
+      port = """ + constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES + """
+    }
  }
 }"""
 
     val configuration = ConfigFactory.parseString(configString)
-    implicit val system = ActorSystem("SprayServer", ConfigFactory.load(configuration))
-
+    val akkaSystem = ActorSystem("SprayServer", ConfigFactory.load(configuration))
+    implicit val system = ActorSystem()
+    
     // the handler actor replies to incoming HttpRequests
-    var handler: ActorRef = system.actorOf(Props(new RequestListenerRouter(2*cores, "RequestListenerRouter", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListenerRouter")
+    var handler: ActorRef = akkaSystem.actorOf(Props(new RequestListenerRouter(2*cores, "RequestListenerRouter", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListenerRouter")
     //handler = system.actorOf(Props(new RequestListenerService("RequestListener", localAddress, constants.SPRAY_SERVER_PORT_FOR_AKKA_MESSAGES, akkaServerIP, constants.AKKA_SERVER_PORT, constants.followers, requestMap)), name = "RequestListener")
     IO(Http) ! Http.Bind(handler, interface = localAddress, port = constants.SPRAY_SERVER_PORT_FOR_HTTP_MESSAGES)
 

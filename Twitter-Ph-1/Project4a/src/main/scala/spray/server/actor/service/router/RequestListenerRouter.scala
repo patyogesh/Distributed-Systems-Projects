@@ -28,7 +28,6 @@ class RequestListenerRouter(count: Int, name: String, localAddress: String, loca
 
   def receive = {
     case _: Http.Connected => sender ! Http.Register(self)
-
     case HttpRequest(method, uri, header, entity, protocol) =>
       println("In router")
       router.route(HttpRequest(method, uri, header, entity, protocol), sender)

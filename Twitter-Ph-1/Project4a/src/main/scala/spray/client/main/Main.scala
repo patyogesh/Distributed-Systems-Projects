@@ -67,7 +67,7 @@ object Main {
 }"""
 
     val configuration = ConfigFactory.parseString(configString)
-    val akkaSystem = ActorSystem("SprayClient", ConfigFactory.load(configuration))
+    val akkaSystem = ActorSystem("SprayClient")//, ConfigFactory.load(configuration))
 
     //Peak Load arguments. Optional.
     var peakActor: ActorRef = null
