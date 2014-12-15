@@ -31,7 +31,7 @@ class RequestListenerService(name: String, localAddress: String, localAkkaMessag
       val map = jsonPayload.convertTo[scala.collection.immutable.Map[String, String]] //Either[String, List[String]]]]
       val value = map.get("text").get
       println(value)
-      sender ! HttpResponse(entity = """{ received : """ + value + """}""", headers = List(`Content-Type`(`application/json`)))
+      sender ! HttpResponse(entity = HttpEntity(`application/json`,"""{ received : """ + value + """}"""))
 
     //USER REGISTRATION
     //Register multiple users to akka server

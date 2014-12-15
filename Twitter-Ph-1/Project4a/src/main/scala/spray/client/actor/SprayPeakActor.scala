@@ -35,7 +35,7 @@ class SprayPeakActor(startTime: Int, interval: Int, serverAddress: String, name:
       println("creating spike load.")
       val uuid = java.util.UUID.randomUUID().toString()
       for {
-        response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/tweet/update/" + name), entity = """{ "text" : """" + getRandomText + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]
+        response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/tweet/update/" + name), entity = HttpEntity(`application/json`,"""{ "text" : """" + getRandomText + """"}"""))).mapTo[HttpResponse]
         _ <- IO(Http) ? Http.CloseAll
       } yield {
         //println("Returned")

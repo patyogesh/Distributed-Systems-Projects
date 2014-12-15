@@ -36,7 +36,7 @@ class SprayClientActor(serverAddress: String, followers: Int, tweetsPerDay: Int,
 
     case TweetToServer =>
       for {
-        response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/tweet/update/"+ name), entity = """{ "text" : """" + getRandomText + """"}""", headers = List(`Content-Type`(`application/json`)))).mapTo[HttpResponse]
+        response <- IO(Http).ask(HttpRequest(method = POST, uri = Uri(s"http://$serverAddress/tweet/update/"+ name), entity = HttpEntity(`application/json`,"""{ "text" : """" + getRandomText + """"}"""))).mapTo[HttpResponse]
         _ <- IO(Http) ? Http.CloseAll
       } yield {
         //Stach tweet update
