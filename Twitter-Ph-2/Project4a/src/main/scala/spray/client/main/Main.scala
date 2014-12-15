@@ -67,7 +67,7 @@ object Main {
 }"""
 
     val configuration = ConfigFactory.parseString(configString)
-    val akkaSystem = ActorSystem("SprayClient")//, ConfigFactory.load(configuration))
+    implicit val akkaSystem = ActorSystem("SprayClient")//, ConfigFactory.load(configuration))
 
     //Peak Load arguments. Optional.
     var peakActor: ActorRef = null
@@ -87,8 +87,8 @@ object Main {
     //#This class instantiates the user actors on client side and starts them when registration on server side is complete.
     val clientActorFactory = akkaSystem.actorOf(Props(new SprayClientActorFactory(clients, serverAddress, followers, sampleSize, numberOfTweetsPerDay, offset, localAddress, timeMultiplier, peakActor)), "ClientActorFactory")
 
-    implicit val system = ActorSystem()
-    import system.dispatcher
+    //implicit val system = ActorSystem()
+    import akkaSystem.dispatcher
     implicit val timeout: Timeout = 20.seconds
     
     for {
